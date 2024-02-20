@@ -1,8 +1,10 @@
 package com.example.portalbackend.domain.exception;
 
+import com.example.portalbackend.util.error.ErrorHandleMessage;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -82,16 +85,29 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(messages);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleError500(Exception ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());
-    }
+
 
 
     @ExceptionHandler(JpaSystemException.class)
     public ResponseEntity<?> handleError500(JpaSystemException ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getLocalizedMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getCause());
     }
+
+   @ExceptionHandler(SQLException.class)
+    public ResponseEntity<?> handleError500(SQLException ex){
+        String errorCode = ex.getSQLState();
+        if (errorCode.equals("23505")){
+            int index = ex.getMessage().indexOf("Detail:");
+            String message = ex.getMessage().substring(index+8).replaceAll("[()]", "").replaceAll("=", ": ").replaceAll("Ya existe la llave", "Ya existe un registro con el mismo ");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ErrorHandleMessage.constraintKeyToMessage(message));
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: No se pudo realizar la operación");
+    }
+
+    /*@ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleError500(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
+    }*/
 
 
     private record ValidationErrorData(String field, List<String> messages, LocalDate timestamp){
