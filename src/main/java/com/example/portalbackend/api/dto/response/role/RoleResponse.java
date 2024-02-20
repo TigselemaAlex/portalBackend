@@ -8,6 +8,7 @@ public record RoleResponse(
         Long id,
         String name,
         String description,
+        Boolean active,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -16,6 +17,7 @@ public record RoleResponse(
                 role.getId(),
                 role.getName(),
                 role.getDescription(),
+                role.getActive(),
                 role.getCreatedAt(),
                 role.getUpdatedAt()
         );

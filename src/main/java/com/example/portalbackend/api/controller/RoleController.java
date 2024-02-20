@@ -1,14 +1,14 @@
 package com.example.portalbackend.api.controller;
 
+import com.example.portalbackend.api.dto.request.role.RoleUpdateData;
 import com.example.portalbackend.api.usecase.RoleUseCase;
 import com.example.portalbackend.common.CustomResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/protected/roles")
@@ -21,8 +21,17 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAll(
-            @PageableDefault(size = 10, sort = {"updatedAt"}) Pageable pageable,
+            @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(defaultValue = "") String search) {
         return roleUseCase.findAll(search, pageable);
+    }
+
+    @GetMapping(value = "/active")
+    public ResponseEntity<CustomResponse<?>> findAllActive() {
+        return roleUseCase.findAllActive();
+    }
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<CustomResponse<?>> update (@Valid @RequestBody RoleUpdateData role, @PathVariable Long id){
+        return roleUseCase.update(role, id);
     }
 }
