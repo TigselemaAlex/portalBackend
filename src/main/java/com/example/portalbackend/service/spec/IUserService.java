@@ -6,8 +6,12 @@ import com.example.portalbackend.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface IUserService {
     Page<User> findAll(String names, String surnames, String dni, Pageable pageable);
+
+    List<User> findAllActive(String names, String surnames, String dni);
 
     User findById(Long id);
 

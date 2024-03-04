@@ -40,6 +40,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public List<User> findAllActive(String names, String surnames, String dni) {
+        return userRepository.findAllActive(names, surnames, dni);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);

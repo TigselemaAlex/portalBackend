@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 public class UserUseCase extends AbstractUseCase{
@@ -55,5 +57,10 @@ public class UserUseCase extends AbstractUseCase{
     public ResponseEntity<CustomResponse<?>> reactivate(final Long id){
         userService.reactivate(id);
         return customResponseBuilder.build(HttpStatus.OK, "Usuario reactivado exitosamente");
+    }
+
+    public ResponseEntity<CustomResponse<?>> findAllActive(final String search){
+        List<UserResponse> responses = userService.findAllActive(search, search, search).stream().map(UserResponse::new).toList();
+        return customResponseBuilder.build(HttpStatus.OK, "Listado de usuarios activos obtenido exitosamente", responses);
     }
 }

@@ -23,9 +23,9 @@ public class User extends AbstractEntity{
     private String names;
     @Column(nullable = false)
     private String surnames;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 15)
     private String phone;
     @Column(nullable = false)
     private String password;

@@ -34,6 +34,13 @@ public class UserController {
         return userUseCase.findAll(search, pageable);
     }
 
+    @GetMapping(value = "/active")
+    public ResponseEntity<CustomResponse<?>> findAllActive(
+            @RequestParam(defaultValue = "") String search
+    ) {
+        return userUseCase.findAllActive(search);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<CustomResponse<?>> findById(@PathVariable Long id) {
         return userUseCase.findById(id);

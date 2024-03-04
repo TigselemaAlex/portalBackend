@@ -6,5 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ResidenceRepository extends JpaRepository<Residence, Long> {
-    Page<Residence> findAllByNumberContainingIgnoreCase(String number, Pageable pageable);
+    Page<Residence> findAllByNumberContainingIgnoreCaseOrUserNamesContainingIgnoreCaseOrUserSurnamesContainingIgnoreCase(String number, String names,String surnames ,Pageable pageable);
+
 }

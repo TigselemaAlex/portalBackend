@@ -22,9 +22,9 @@ public class ResidenceController {
 
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAllResidences(
-            @RequestParam(required = false, defaultValue = "") String number,
-            @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        return residenceUseCase.findAll(number, pageable);
+            @RequestParam(required = false, defaultValue = "") String search,
+            @PageableDefault(size = 10, sort = "number", direction = Sort.Direction.ASC) Pageable pageable) {
+        return residenceUseCase.findAll(search, pageable);
     }
 
     @PatchMapping("/{id}")

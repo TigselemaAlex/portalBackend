@@ -16,11 +16,8 @@ public class Residence extends AbstractEntity{
 
     @Column(nullable = false, unique = true)
     private String number;
-
     @ManyToOne
     private User user;
-
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private Passage passage;

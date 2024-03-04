@@ -39,8 +39,6 @@ public class ResidenceUseCase extends AbstractUseCase {
 
 
     public ResponseEntity<CustomResponse<?>> findAll(String number, Pageable pageable){
-        if (!NumberUtils.isNumeric(number))
-            return customResponseBuilder.build(HttpStatus.BAD_REQUEST, "El número de residencia debe ser un número", null);
         Page<ResidenceResponse> residences = residenceService.findAll(number, pageable).map(ResidenceResponse::new);
         PageResponse response = new PageResponse(residences);
         return customResponseBuilder.build(HttpStatus.OK, "Residencia obtenida exitosamente", response);

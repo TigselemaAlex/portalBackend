@@ -35,11 +35,11 @@ public class ResidenceService implements IResidenceService{
     @Override
     public Residence update(ResidenceUpdateData residence, Long id) {
         Residence residenceToUpdate = findById(id);
-        Passage passage = passageService.findById(residence.passage());
-        residenceToUpdate.setPassage(passage);
         if (Objects.nonNull(residence.user())) {
             User user = userService.findById(residence.user());
             residenceToUpdate.setUser(user);
+        }else{
+            residenceToUpdate.setUser(null);
         }
         return residenceRepository.save(residenceToUpdate);
     }
@@ -67,6 +67,6 @@ public class ResidenceService implements IResidenceService{
     @Override
     @Transactional(readOnly = true)
     public Page<Residence> findAll(String number, Pageable pageable) {
-        return residenceRepository.findAllByNumberContainingIgnoreCase(number, pageable);
+        return residenceRepository.findAllByNumberContainingIgnoreCaseOrUserNamesContainingIgnoreCaseOrUserSurnamesContainingIgnoreCase(number, number,number,pageable);
     }
 }
