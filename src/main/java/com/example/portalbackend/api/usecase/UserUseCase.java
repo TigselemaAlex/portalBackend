@@ -2,6 +2,7 @@ package com.example.portalbackend.api.usecase;
 
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdateData;
+import com.example.portalbackend.api.dto.request.user.UserUpdatePasswordData;
 import com.example.portalbackend.api.dto.response.PageResponse;
 import com.example.portalbackend.api.dto.response.user.UserResponse;
 import com.example.portalbackend.common.CustomResponse;
@@ -62,5 +63,19 @@ public class UserUseCase extends AbstractUseCase{
     public ResponseEntity<CustomResponse<?>> findAllActive(final String search){
         List<UserResponse> responses = userService.findAllActive(search, search, search).stream().map(UserResponse::new).toList();
         return customResponseBuilder.build(HttpStatus.OK, "Listado de usuarios activos obtenido exitosamente", responses);
+    }
+
+    public ResponseEntity<CustomResponse<?>> recoverPassword(final Long id){
+        // TODO: Implement this method
+        User userFromDb = userService.recoverPassword(id);
+        UserResponse response = new UserResponse(userFromDb);
+        return customResponseBuilder.build(HttpStatus.OK, "Contraseña recuperada exitosamente", response);
+    }
+
+    public ResponseEntity<CustomResponse<?>> updatePassword(final Long id, final UserUpdatePasswordData data){
+        // TODO: Implement this method
+        User userFromDb = userService.updatePassword(id, data);
+        UserResponse response = new UserResponse(userFromDb);
+        return customResponseBuilder.build(HttpStatus.OK, "Contraseña actualizada exitosamente", response);
     }
 }

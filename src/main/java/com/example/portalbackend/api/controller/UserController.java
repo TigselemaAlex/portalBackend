@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -46,21 +47,25 @@ public class UserController {
         return userUseCase.findById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/{id}")
     public ResponseEntity<CustomResponse<?>> update(@Valid @RequestBody UserUpdateData user, @PathVariable Long id) {
         return userUseCase.update(user, id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<CustomResponse<?>> create(@Valid @RequestBody UserCreateData user) {
         return userUseCase.create(user);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CustomResponse<?>> delete(@PathVariable Long id) {
         return userUseCase.delete(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping(value = "/{id}/reactivate")
     public ResponseEntity<CustomResponse<?>> reactivate(@PathVariable Long id) {
         return userUseCase.reactivate(id);

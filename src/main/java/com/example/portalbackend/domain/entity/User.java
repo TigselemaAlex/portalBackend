@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class User extends AbstractEntity{
     @Column(nullable = false, length = 15, unique = true)
     private String dni;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<AuthRole> authRoles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

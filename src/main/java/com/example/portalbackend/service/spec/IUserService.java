@@ -2,6 +2,7 @@ package com.example.portalbackend.service.spec;
 
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdateData;
+import com.example.portalbackend.api.dto.request.user.UserUpdatePasswordData;
 import com.example.portalbackend.domain.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,8 @@ public interface IUserService {
     void delete(Long id);
 
     void reactivate(Long id);
+
+    User recoverPassword(Long id);
+
+    User updatePassword(Long id, UserUpdatePasswordData data);
 }

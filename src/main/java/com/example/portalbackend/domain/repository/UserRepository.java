@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -17,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.active = true AND (u.names LIKE %:names% OR u.surnames LIKE %:surnames% OR u.dni LIKE %:dni%)")
     List<User> findAllActive(String names, String surnames, String dni);
 
-    List<User> findAllByActiveIsFalse();
+    Optional<User> findByDni(String dni);
 
 }
