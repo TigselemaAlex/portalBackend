@@ -24,7 +24,7 @@ public interface IUserService {
 
     void reactivate(Long id);
 
-    User recoverPassword(Long id);
+    User recoverPassword(String dni, String password);
 
     User updatePassword(Long id, UserUpdatePasswordData data);
 }

@@ -105,9 +105,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User recoverPassword(Long id) {
-        User userToRecover = findById(id);
-        userToRecover.setPassword(passwordEncoder.encode(UserUtil.generatePassword()));
+    public User recoverPassword(String dni, String password) {
+        User userToRecover = userRepository.findByDni(dni).orElseThrow(EntityNotFoundException::new);
+        userToRecover.setPassword(passwordEncoder.encode(password));
         return userRepository.save(userToRecover);
     }
 

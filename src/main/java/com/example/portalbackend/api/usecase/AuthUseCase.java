@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+
 @Component
 public class AuthUseCase {
 
@@ -40,5 +42,11 @@ public class AuthUseCase {
         }else{
             throw new UsernameNotFoundException("Invalid username or password");
         }
+    }
+
+    public ResponseEntity<HashMap<String, Boolean>> validateToken() {
+        HashMap<String, Boolean> response = new HashMap<>();
+        response.put("isValid", true);
+        return ResponseEntity.ok(response);
     }
 }

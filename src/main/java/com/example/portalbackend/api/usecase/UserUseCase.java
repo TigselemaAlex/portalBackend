@@ -4,11 +4,14 @@ import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdatePasswordData;
 import com.example.portalbackend.api.dto.response.PageResponse;
+import com.example.portalbackend.api.dto.response.mail.MailResponse;
 import com.example.portalbackend.api.dto.response.user.UserResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.User;
+import com.example.portalbackend.service.spec.IMailService;
 import com.example.portalbackend.service.spec.IUserService;
+import com.example.portalbackend.util.user.UserUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,9 +25,12 @@ import java.util.List;
 public class UserUseCase extends AbstractUseCase{
 
     private final IUserService userService;
-    protected UserUseCase(CustomResponseBuilder customResponseBuilder, IUserService userService) {
+
+    private final IMailService mailService;
+    protected UserUseCase(CustomResponseBuilder customResponseBuilder, IUserService userService, IMailService mailService) {
         super(customResponseBuilder);
         this.userService = userService;
+        this.mailService = mailService;
     }
 
     public ResponseEntity<CustomResponse<?>> findAll(final String search, final Pageable pageable){
@@ -40,7 +46,6 @@ public class UserUseCase extends AbstractUseCase{
 
     public ResponseEntity<CustomResponse<?>> update(final UserUpdateData user, final Long id){
         User userFromDb = userService.update(user, id);
-        //UserResponse response = new UserResponse(userFromDb);
         return customResponseBuilder.build(HttpStatus.OK, "Usuario actualizado exitosamente");
     }
 
@@ -65,11 +70,11 @@ public class UserUseCase extends AbstractUseCase{
         return customResponseBuilder.build(HttpStatus.OK, "Listado de usuarios activos obtenido exitosamente", responses);
     }
 
-    public ResponseEntity<CustomResponse<?>> recoverPassword(final Long id){
-        // TODO: Implement this method
-        User userFromDb = userService.recoverPassword(id);
-        UserResponse response = new UserResponse(userFromDb);
-        return customResponseBuilder.build(HttpStatus.OK, "Contraseña recuperada exitosamente", response);
+    public ResponseEntity<MailResponse> recoverPassword(final String dni){
+        String newPassword = UserUtil.generateRecoveryPassword();
+        User userFromDb = userService.recoverPassword(dni, newPassword);
+        MailResponse response = mailService.sendMail(userFromDb, newPassword);
+        return ResponseEntity.ok(response);
     }
 
     public ResponseEntity<CustomResponse<?>> updatePassword(final Long id, final UserUpdatePasswordData data){

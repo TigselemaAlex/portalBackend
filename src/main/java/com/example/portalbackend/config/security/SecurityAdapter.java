@@ -52,7 +52,9 @@ public class SecurityAdapter {
                 )
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                    .requestMatchers("/public/**").permitAll()
+                                    .requestMatchers("/public/auth/login").permitAll()
+                                    .requestMatchers("/public/auth/recover-password/**").permitAll()
+                                    .requestMatchers("/public/auth/validate-token").authenticated()
                                     .requestMatchers("/protected/**").authenticated()
                                     .anyRequest().denyAll()
                         )

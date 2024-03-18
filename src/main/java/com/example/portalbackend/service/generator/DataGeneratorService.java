@@ -1,20 +1,29 @@
 package com.example.portalbackend.service.generator;
 
+import com.example.portalbackend.api.dto.request.parking.ParkingCreateData;
+import com.example.portalbackend.api.dto.request.parking_group.ParkingGroupCreateData;
+import com.example.portalbackend.api.dto.request.parking_type.ParkingTypeCreateData;
 import com.example.portalbackend.api.dto.request.passage.PassageCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceUpdateData;
+import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateData;
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.domain.entity.Passage;
 import com.example.portalbackend.domain.entity.Role;
-import com.example.portalbackend.domain.entity.User;
-import com.example.portalbackend.domain.repository.PassageRepository;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.service.impl.PassageService;
 import com.example.portalbackend.service.impl.ResidenceService;
 import com.example.portalbackend.service.impl.UserService;
+import com.example.portalbackend.service.spec.IParkingGroupService;
+import com.example.portalbackend.service.spec.IParkingService;
+import com.example.portalbackend.service.spec.IParkingTypeService;
+import com.example.portalbackend.service.spec.ISocialEventService;
+import com.example.portalbackend.util.enumerate.ParkingStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -24,12 +33,22 @@ public class DataGeneratorService {
     private final UserService userService;
     private final PassageService passageService;
     private final ResidenceService residenceService;
+    private final IParkingTypeService parkingTypeService;
+    private final IParkingGroupService parkingGroupService;
 
-    public DataGeneratorService(RoleRepository roleRepository, UserService userService, PassageService passageService, ResidenceService residenceService) {
+    private final ISocialEventService socialEventService;
+
+    private final IParkingService parkingService;
+
+    public DataGeneratorService(RoleRepository roleRepository, UserService userService, PassageService passageService, ResidenceService residenceService, IParkingTypeService parkingTypeService, IParkingGroupService parkingGroupService, ISocialEventService socialEventService, IParkingService parkingService) {
         this.roleRepository = roleRepository;
         this.userService = userService;
         this.passageService = passageService;
         this.residenceService = residenceService;
+        this.parkingTypeService = parkingTypeService;
+        this.parkingGroupService = parkingGroupService;
+        this.socialEventService = socialEventService;
+        this.parkingService = parkingService;
     }
 
     public void generateRoles() {
@@ -1122,13 +1141,6 @@ public class DataGeneratorService {
                         "1802979326",
                         List.of(6L)),
                 new UserCreateData(
-                        "Jessica Nataly",
-                        "Tapia Ledesma",
-                        "jessy.nicol.ddef@hotmail.com",
-                        "0987905049",
-                        "1804168290",
-                        List.of(6L)),
-                new UserCreateData(
                         "María Belén",
                         "Pérez Pérez",
                         "marybelen24@hotmail.com",
@@ -1218,7 +1230,7 @@ public class DataGeneratorService {
                         "estela.naranjo081@gmail.com",
                         "0984058324",
                         "1801160951",
-                        List.of(5L,6L)),
+                        List.of(4L,6L)),
                 new UserCreateData(
                         "Ana",
                         "Uñug",
@@ -1331,11 +1343,11 @@ public class DataGeneratorService {
         for (int i = 80; i <= 97; i++) {
             createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeIca.getId()));
         }
-        for (int i = 107; i <= 116; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeIca.getId()));
-        }
         for (int i = 98; i <= 106; i++) {
             createData.add(new ResidenceCreateData(String.valueOf(i), null,puertoPrincipe.getId()));
+        }
+        for (int i = 107; i <= 116; i++) {
+            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeIca.getId()));
         }
         for (int i = 117; i <= 126; i++) {
             createData.add(new ResidenceCreateData(String.valueOf(i), null,puertoPrincipe.getId()));
@@ -1516,32 +1528,181 @@ public class DataGeneratorService {
         residenceService.update(new ResidenceUpdateData(151L), 58L);
         residenceService.update(new ResidenceUpdateData(152L), 7L);
         residenceService.update(new ResidenceUpdateData(153L), 8L);
-        residenceService.update(new ResidenceUpdateData(154L), 84L);
-        residenceService.update(new ResidenceUpdateData(155L), 99L);
-        residenceService.update(new ResidenceUpdateData(156L), 111L);
-        residenceService.update(new ResidenceUpdateData(156L), 162L);
-        residenceService.update(new ResidenceUpdateData(157L), 146L);
-        residenceService.update(new ResidenceUpdateData(157L), 133L);
-        residenceService.update(new ResidenceUpdateData(158L), 235L);
-        residenceService.update(new ResidenceUpdateData(158L), 136L);
-        residenceService.update(new ResidenceUpdateData(159L), 67L);
-        residenceService.update(new ResidenceUpdateData(159L), 74L);
-        residenceService.update(new ResidenceUpdateData(160L), 183L);
-        residenceService.update(new ResidenceUpdateData(161L), 88L);
-        residenceService.update(new ResidenceUpdateData(162L), 200L);
-        residenceService.update(new ResidenceUpdateData(163L), 228L);
-        residenceService.update(new ResidenceUpdateData(164L), 5L);
-        residenceService.update(new ResidenceUpdateData(165L), 63L);
-        residenceService.update(new ResidenceUpdateData(166L), 84L);
-        residenceService.update(new ResidenceUpdateData(167L), 71L);
-        residenceService.update(new ResidenceUpdateData(168L), 198L);
-        residenceService.update(new ResidenceUpdateData(169L), 166L);
-        residenceService.update(new ResidenceUpdateData(170L), 123L);
-        residenceService.update(new ResidenceUpdateData(171L), 255L);
-        residenceService.update(new ResidenceUpdateData(172L), 220L);
-        residenceService.update(new ResidenceUpdateData(173L), 279L);
-        residenceService.update(new ResidenceUpdateData(174L), 245L);
-        residenceService.update(new ResidenceUpdateData(175L), 139L);
+        //residenceService.update(new ResidenceUpdateData(154L), 84L);
+        residenceService.update(new ResidenceUpdateData(154L), 99L);
+        residenceService.update(new ResidenceUpdateData(155L), 111L);
+        residenceService.update(new ResidenceUpdateData(155L), 162L);
+        residenceService.update(new ResidenceUpdateData(156L), 146L);
+        residenceService.update(new ResidenceUpdateData(156L), 133L);
+        residenceService.update(new ResidenceUpdateData(157L), 235L);
+        residenceService.update(new ResidenceUpdateData(157L), 136L);
+        residenceService.update(new ResidenceUpdateData(158L), 67L);
+        residenceService.update(new ResidenceUpdateData(158L), 74L);
+        residenceService.update(new ResidenceUpdateData(159L), 183L);
+        residenceService.update(new ResidenceUpdateData(160L), 88L);
+        residenceService.update(new ResidenceUpdateData(161L), 200L);
+        residenceService.update(new ResidenceUpdateData(162L), 228L);
+        residenceService.update(new ResidenceUpdateData(163L), 5L);
+        residenceService.update(new ResidenceUpdateData(164L), 63L);
+        residenceService.update(new ResidenceUpdateData(165L), 84L);
+        residenceService.update(new ResidenceUpdateData(166L), 71L);
+        residenceService.update(new ResidenceUpdateData(167L), 198L);
+        residenceService.update(new ResidenceUpdateData(168L), 166L);
+        residenceService.update(new ResidenceUpdateData(169L), 123L);
+        residenceService.update(new ResidenceUpdateData(170L), 255L);
+        residenceService.update(new ResidenceUpdateData(171L), 220L);
+        residenceService.update(new ResidenceUpdateData(172L), 279L);
+        residenceService.update(new ResidenceUpdateData(173L), 245L);
+        residenceService.update(new ResidenceUpdateData(174L), 139L);
 
     }
+
+    public void generateParkingTypes(){
+        System.out.println("Generating parking types");
+        List<ParkingTypeCreateData> createData = List.of(
+                new ParkingTypeCreateData("Zona Azul", "Parqueadero ubicado en la zona azul","info" ,new BigDecimal(10)),
+                new ParkingTypeCreateData("Zona Particular", "Parqueadero ubicado en la zona particular","warning" ,new BigDecimal(10))
+        );
+        createData.forEach(parkingTypeService::create);
+    }
+
+    public void generateParkingGroups(){
+        System.out.println("Generating parking groups");
+        List<ParkingGroupCreateData> createData = List.of(
+                new ParkingGroupCreateData("G-PP1", "58px", "370px", 2L),
+                new ParkingGroupCreateData("G-PP2", "466px", "447px", 2L),
+                new ParkingGroupCreateData("G-PP3", "188px", "335px", 2L),
+                new ParkingGroupCreateData("G-PP4", "366px", "164px", 2L),
+                new ParkingGroupCreateData("G-PP5", "538px", "4px", 2L),
+                new ParkingGroupCreateData("G-PP6", "778px", "12px", 2L),
+                new ParkingGroupCreateData("G-PP7", "782px", "98px", 2L),
+                new ParkingGroupCreateData("G-PP8", "658px", "142px", 2L),
+                new ParkingGroupCreateData("G-PP9", "538px", "100px", 2L),
+                new ParkingGroupCreateData("G-PP10", "538px", "172px", 2L),
+                new ParkingGroupCreateData("G-PP11", "628px", "292px", 2L),
+                new ParkingGroupCreateData("G-PP12", "628px", "398px", 2L),
+                new ParkingGroupCreateData("G-PP13", "628px", "508px", 2L),
+                new ParkingGroupCreateData("G-PP14", "452px", "558px", 2L),
+                new ParkingGroupCreateData("G-PP15", "594px", "676px", 2L),
+                new ParkingGroupCreateData("G-PP16", "758px", "620px", 2L),
+                new ParkingGroupCreateData("G-PP17", "658px", "750px", 2L),
+                new ParkingGroupCreateData("G-PP18", "1064px", "654px", 2L),
+                new ParkingGroupCreateData("G-PP19", "1020px", "454px", 2L),
+                new ParkingGroupCreateData("G-PA1", "293px", "370px", 1L),
+                new ParkingGroupCreateData("G-PA2", "358px", "527px", 1L),
+                new ParkingGroupCreateData("G-PA3", "454px", "337px", 1L),
+                new ParkingGroupCreateData("G-PA4", "286px", "164px", 1L),
+                new ParkingGroupCreateData("G-PA5", "466px", "164px", 1L),
+                new ParkingGroupCreateData("G-PA6", "455px", "94px", 1L),
+                new ParkingGroupCreateData("G-PA7", "628px", "234px", 1L),
+                new ParkingGroupCreateData("G-PA8", "628px", "348px", 1L),
+                new ParkingGroupCreateData("G-PA9", "628px", "448px", 1L),
+                new ParkingGroupCreateData("G-PA10", "888px", "650px", 1L),
+                new ParkingGroupCreateData("G-PA11", "888px", "510px", 1L)
+        );
+        createData.forEach(parkingGroupService::create);
+    }
+
+    public void generateParkings(){
+        List<ParkingCreateData> createYellowParkings = getParkingYellowCreateData();
+        createYellowParkings.forEach(parkingService::create);
+
+        List<ParkingCreateData> createBlueParkings = getParkingBlueCreateData();
+        createBlueParkings.forEach(parkingService::create);
+
+    }
+
+
+    private List<ParkingCreateData> getParkingYellowCreateData(){
+        List<ParkingCreateData> createYellowParkings = new ArrayList<>();
+        for (int i = 1; i <= 253; i++) {
+            if (i<=11){
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 1L));
+            } else if (i <=23) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 2L));
+            } else if (i<=46) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 3L));
+            } else if (i<=55) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 4L));
+            } else if (i<=60) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 5L));
+            } else if (i<=87) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 6L));
+            } else if (i<=91) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 7L));
+            } else if (i<=106) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 8L));
+            } else if (i<=118) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 9L));
+            } else if (i<=128) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 10L));
+            } else if (i<=139) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 11L));
+            } else if (i<=150) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 12L));
+            } else if (i<=161) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 13L));
+            } else if (i<=175) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 14L));
+            } else if (i<=191) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 15L));
+            } else if (i<=201) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 16L));
+            } else if (i<=237) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 17L));
+            } else if (i<=242) {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 18L));
+            } else {
+                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 19L));
+            }
+        }
+        return createYellowParkings;
+    }
+    private List<ParkingCreateData> getParkingBlueCreateData() {
+        List<ParkingCreateData> createBlueParkings = new ArrayList<>();
+        for (int i= 1 ; i<= 68; i++){
+            if (i<=23){
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 20L));
+            } else if (i<=29) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 21L));
+            } else if (i<=39) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 22L));
+            } else if (i<=43) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 23L));
+            } else if (i<=50) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 24L));
+            } else if (i<=59) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 25L));
+            } else if (i == 60) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 26L));
+            } else if (i == 61) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 27L));
+            } else if (i == 62) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 28L));
+            } else if (i<=66) {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 29L));
+            } else {
+                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 30L));
+            }
+        }
+        return createBlueParkings;
+    }
+
+    public void generateSocialEvents(){
+        System.out.println("Generating social events");
+        SocialEventCreateData  createData = new SocialEventCreateData("Día de la madre",
+                        "Evento para conmemorar el día de la madre",
+                        "Canchas del condominio",
+                        getCalendarFromCustomDate(2024, 4, 12, 14, 0),
+                        "",
+                        1L);
+        socialEventService.create(createData);
+    }
+
+    private Calendar getCalendarFromCustomDate(int years, int month, int date, int hour, int minute){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(years, month, date, hour, minute);
+        return calendar;
+    }
+
 }

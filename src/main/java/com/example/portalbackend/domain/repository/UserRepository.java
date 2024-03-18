@@ -20,4 +20,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByDni(String dni);
 
+
+    long countUsersByActiveIsTrue();
+
+    long countUsersByActiveIsFalse();
+
+    long countUsersByAuthRolesRoleName(String roleName);
+
+
 }

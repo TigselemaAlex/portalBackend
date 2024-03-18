@@ -11,4 +11,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Page<Role> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String name, String description, Pageable pageable);
     List<Role> findAllByActiveIsTrue();
+
 }

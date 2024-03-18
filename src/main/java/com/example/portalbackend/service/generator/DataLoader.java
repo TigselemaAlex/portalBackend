@@ -21,5 +21,9 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
         dataGeneratorService.generatePassages();
         dataGeneratorService.generateResidences();
         dataGeneratorService.assignUsersToResidences();
+        dataGeneratorService.generateParkingTypes();
+        dataGeneratorService.generateParkingGroups();
+        dataGeneratorService.generateParkings();
+        dataGeneratorService.generateSocialEvents();
     }
 }

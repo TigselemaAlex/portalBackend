@@ -8,4 +8,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ResidenceRepository extends JpaRepository<Residence, Long> {
     Page<Residence> findAllByNumberContainingIgnoreCaseOrUserNamesContainingIgnoreCaseOrUserSurnamesContainingIgnoreCase(String number, String names,String surnames ,Pageable pageable);
 
+    long countResidenceByUserIsNull();
+
+    long countResidenceByUserIsNotNull();
+
+    long countResidenceByUserIsNotNullAndPassageName(String passageName);
+
 }
