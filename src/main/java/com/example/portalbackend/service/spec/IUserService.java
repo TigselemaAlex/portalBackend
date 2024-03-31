@@ -27,4 +27,6 @@ public interface IUserService {
     User recoverPassword(String dni, String password);
 
     User updatePassword(Long id, UserUpdatePasswordData data);
+
+    User findPresident();
 }

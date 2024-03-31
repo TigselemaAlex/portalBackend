@@ -9,6 +9,7 @@ import com.example.portalbackend.service.spec.IDashboardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,56 +40,14 @@ public class DashboardService implements IDashboardService {
         Long totalResidences = residenceRepository.count();
         Long totalFreeResidences = residenceRepository.countResidenceByUserIsNull();
         Long totalOccupiedResidences = residenceRepository.countResidenceByUserIsNotNull();
-        List<AdminDashboardResponse.UserPerPassage> userPerPassage = List.of(
-                new AdminDashboardResponse.UserPerPassage(
-                        "Calle Caracas",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Calle Caracas")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje Maracay",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje Maracay")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Calle Corrientes",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Calle Corrientes")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje Osorno",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje Osorno")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje Ica",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje Ica")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Puerto Principe",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Puerto Principe")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Calle Iquique",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Calle Iquique")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje Corrientes",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje Corrientes")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje Rosario",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje Rosario")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Pasaje San Estanislao",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Pasaje San Estanislao")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Cale Tucumán",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Cale Tucumán")),
-                new AdminDashboardResponse.UserPerPassage(
-                        "Calle Concepción",
-                        residenceRepository.
-                                countResidenceByUserIsNotNullAndPassageName("Calle Concepción"))
-        );
+
+        List<AdminDashboardResponse.UserPerPassage> userPerPassage = new ArrayList<>();
+        passageRepository.findAll().forEach(passage -> {
+            userPerPassage.add(new AdminDashboardResponse.UserPerPassage(
+                    passage.getName(),
+                    residenceRepository.countResidenceByUserIsNotNullAndPassage(passage)
+            ));
+        });
 
         List<AdminDashboardResponse.UserPerRole> userPerRole = List.of(
                 new AdminDashboardResponse.UserPerRole(

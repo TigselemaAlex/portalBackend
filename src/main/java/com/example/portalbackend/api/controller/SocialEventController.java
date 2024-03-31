@@ -1,17 +1,16 @@
 package com.example.portalbackend.api.controller;
 
-import com.example.portalbackend.api.dto.request.social_event.SocialEventSearchData;
 import com.example.portalbackend.api.usecase.SocialEventUseCase;
 import com.example.portalbackend.common.CustomResponse;
-import lombok.Getter;
+import com.example.portalbackend.domain.exception.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/protected/social-event")
@@ -21,13 +20,42 @@ public class SocialEventController {
         this.socialEventUseCase = socialEventUseCase;
     }
     @GetMapping
-    public ResponseEntity<CustomResponse<?>> findAll(@RequestBody SocialEventSearchData search,
+    public ResponseEntity<CustomResponse<?>> findAll(@RequestParam(defaultValue = "") String from,
+                                                     @RequestParam(defaultValue = "") String to,
+                                                     @RequestParam(defaultValue = "") String title,
                                                      @PageableDefault(
                                                              size = 10,
                                                              sort = "id",
                                                              direction = Sort.Direction.DESC)
                                                      Pageable pageable
                                                      ){
-        return socialEventUseCase.findAll(search.from(), search.to(), pageable);
+        return socialEventUseCase.findAll(from, to, title,pageable);
+    }
+
+    @PostMapping
+    public ResponseEntity<CustomResponse<?>> createSocialEvent(@RequestParam String title,
+                                                              @RequestParam(required = false) String description,
+                                                              @RequestParam String place,
+                                                              @RequestParam String date,
+                                                              @RequestParam(required = false) MultipartFile image,
+                                                              @RequestParam Long createdBy) throws IOException, FileUploadException {
+        return socialEventUseCase.createSocialEvent(title, description, place, date, image ,createdBy);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomResponse<?>> updateSocialEvent(@PathVariable Long id,
+                                                              @RequestParam String title,
+                                                              @RequestParam(required = false) String description,
+                                                              @RequestParam String place,
+                                                              @RequestParam String date,
+                                                              @RequestParam(required = false) MultipartFile image,
+                                                              @RequestParam Boolean isImageUpdated,
+                                                              @RequestParam Long updatedBy) throws IOException, FileUploadException {
+        return socialEventUseCase.updateSocialEvent(id, title, description, place, date, image, isImageUpdated,updatedBy);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CustomResponse<?>> deleteSocialEvent(@PathVariable Long id){
+        return socialEventUseCase.deleteSocialEvent(id);
     }
 }

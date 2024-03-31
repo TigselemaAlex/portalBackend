@@ -26,6 +26,7 @@ import java.util.List;
 @Transactional
 public class UserService implements IUserService {
 
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
@@ -116,5 +117,10 @@ public class UserService implements IUserService {
         User userToUpdate = findById(id);
         userToUpdate.setPassword(passwordEncoder.encode(data.password()));
         return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User findPresident() {
+        return userRepository.findFirstByAuthRolesRoleNameOrderByUpdatedAtDesc("PRESIDENT").orElseThrow(EntityNotFoundException::new);
     }
 }

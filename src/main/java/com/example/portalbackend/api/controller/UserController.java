@@ -72,6 +72,10 @@ public class UserController {
     }
 
 
-
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT')")
+    @GetMapping(value = "/president")
+    public ResponseEntity<CustomResponse<?>> findPresident(){
+        return userUseCase.findPresident();
+    }
 
 }

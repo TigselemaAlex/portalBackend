@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Calendar;
 
-public record SocialEventCreateData(
+public record SocialEventUpdateData(
         @NotBlank(message = "El título es requerido")
         String title,
         String description,
@@ -16,8 +16,8 @@ public record SocialEventCreateData(
         @NotNull(message = "La fecha es requerida")
         Calendar date,
         MultipartFile image,
-
-        @NotNull(message = "El usuario creador es requerido")
-        Long createdBy
+        Boolean isImageUpdated,
+        @NotNull(message = "El usuario que actualiza es requerido")
+        Long updatedBy
 ) {
 }

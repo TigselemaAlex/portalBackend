@@ -20,6 +20,7 @@ public class SocialEvent extends AbstractEntity{
     private String place;
     private Calendar date;
     private String imageUrl;
+    private String fileName;
     @ManyToOne
     private User createdBy;
     @ManyToOne

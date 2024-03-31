@@ -10,7 +10,10 @@ import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateD
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.domain.entity.Passage;
 import com.example.portalbackend.domain.entity.Role;
+import com.example.portalbackend.domain.entity.SocialEvent;
+import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.domain.repository.RoleRepository;
+import com.example.portalbackend.domain.repository.SocialEventRepository;
 import com.example.portalbackend.service.impl.PassageService;
 import com.example.portalbackend.service.impl.ResidenceService;
 import com.example.portalbackend.service.impl.UserService;
@@ -21,6 +24,7 @@ import com.example.portalbackend.service.spec.ISocialEventService;
 import com.example.portalbackend.util.enumerate.ParkingStatus;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,12 +39,11 @@ public class DataGeneratorService {
     private final ResidenceService residenceService;
     private final IParkingTypeService parkingTypeService;
     private final IParkingGroupService parkingGroupService;
-
     private final ISocialEventService socialEventService;
-
     private final IParkingService parkingService;
+    private final SocialEventRepository socialEventRepository;
 
-    public DataGeneratorService(RoleRepository roleRepository, UserService userService, PassageService passageService, ResidenceService residenceService, IParkingTypeService parkingTypeService, IParkingGroupService parkingGroupService, ISocialEventService socialEventService, IParkingService parkingService) {
+    public DataGeneratorService(RoleRepository roleRepository, UserService userService, PassageService passageService, ResidenceService residenceService, IParkingTypeService parkingTypeService, IParkingGroupService parkingGroupService, ISocialEventService socialEventService, IParkingService parkingService, SocialEventRepository socialEventRepository) {
         this.roleRepository = roleRepository;
         this.userService = userService;
         this.passageService = passageService;
@@ -49,6 +52,7 @@ public class DataGeneratorService {
         this.parkingGroupService = parkingGroupService;
         this.socialEventService = socialEventService;
         this.parkingService = parkingService;
+        this.socialEventRepository = socialEventRepository;
     }
 
     public void generateRoles() {
@@ -1694,9 +1698,42 @@ public class DataGeneratorService {
                         "Evento para conmemorar el día de la madre",
                         "Canchas del condominio",
                         getCalendarFromCustomDate(2024, 4, 12, 14, 0),
-                        "",
+                        null,
                         1L);
-        socialEventService.create(createData);
+        SocialEventCreateData  createData2 = new SocialEventCreateData("Día de la madre",
+                "Evento para conmemorar el día de la madre",
+                "Canchas del condominio",
+                getCalendarFromCustomDate(2024, 4, 12, 14, 0),
+                null,
+                1L);
+        SocialEventCreateData  createData3 = new SocialEventCreateData("Día de la madre",
+                "Evento para conmemorar el día de la madre",
+                "Canchas del condominio",
+                getCalendarFromCustomDate(2024, 4, 12, 14, 0),
+                null,
+                1L);
+        SocialEventCreateData  createData4 = new SocialEventCreateData("Día de la madre",
+                "Evento para conmemorar el día de la madre",
+                "Canchas del condominio",
+                getCalendarFromCustomDate(2024, 4, 12, 14, 0),
+                null,
+                1L);
+        try {
+            SocialEvent socialEvent = socialEventService.create(createData);
+            socialEvent.setImageUrl("https://d39ozdhkcyy1f8.cloudfront.net/051023_Dia_Madre_Feriado_ac2adc981e.png");
+            socialEventRepository.save(socialEvent);
+            socialEvent = socialEventService.create(createData2);
+            socialEvent.setImageUrl("https://reloj-alarma.es/temporizador/dia-de-la-madre/2024/image.jpg");
+            socialEventRepository.save(socialEvent);
+            socialEvent = socialEventService.create(createData3);
+            socialEvent.setImageUrl("https://i.pinimg.com/736x/98/41/6d/98416d477289e92675f957e4baec6e37.jpg");
+            socialEventRepository.save(socialEvent);
+            socialEvent = socialEventService.create(createData4);
+            socialEvent.setImageUrl("https://pbs.twimg.com/media/D5ad4iZWsAAtbSO.jpg");
+            socialEventRepository.save(socialEvent);
+        } catch (IOException | FileUploadException e) {
+            e.printStackTrace();
+        }
     }
 
     private Calendar getCalendarFromCustomDate(int years, int month, int date, int hour, int minute){

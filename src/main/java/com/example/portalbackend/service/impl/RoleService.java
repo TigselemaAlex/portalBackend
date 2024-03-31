@@ -44,8 +44,6 @@ public class RoleService implements IRoleService {
     public Role update(RoleUpdateData role, Long id) {
         Role roleToUpdate = findById(id);
         roleToUpdate.setDescription(role.description());
-        roleToUpdate.setActive(role.active());
-
         return roleRepository.save(roleToUpdate);
     }
 

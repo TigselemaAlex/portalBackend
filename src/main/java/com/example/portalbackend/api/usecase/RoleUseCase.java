@@ -40,6 +40,5 @@ public class RoleUseCase extends AbstractUseCase {
         Role roleFromDb = roleService.update(role, id);
         RoleResponse response = new RoleResponse(roleFromDb);
         return customResponseBuilder.build(HttpStatus.OK, "Rol actualizado exitosamente", response);
-
     }
 }

@@ -83,4 +83,9 @@ public class UserUseCase extends AbstractUseCase{
         UserResponse response = new UserResponse(userFromDb);
         return customResponseBuilder.build(HttpStatus.OK, "Contraseña actualizada exitosamente", response);
     }
+
+    public ResponseEntity<CustomResponse<?>> findPresident(){
+        UserResponse response = new UserResponse(userService.findPresident());
+        return customResponseBuilder.build(HttpStatus.OK, "Presidente obtenido exitosamente", response);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.portalbackend.api.dto.response.social_event;
 import com.example.portalbackend.api.dto.response.user.UserResponse;
 import com.example.portalbackend.domain.entity.SocialEvent;
 
+import java.time.Instant;
 import java.util.Calendar;
 
 public record SocialEventResponse(
@@ -13,7 +14,8 @@ public record SocialEventResponse(
         Calendar date,
         String imageUrl,
         UserResponse createdBy,
-        UserResponse updatedBy
+        UserResponse updatedBy,
+        Instant createdAt
 ) {
     public SocialEventResponse(SocialEvent socialEvent) {
         this(
@@ -24,7 +26,8 @@ public record SocialEventResponse(
                 socialEvent.getDate(),
                 socialEvent.getImageUrl(),
                 new UserResponse(socialEvent.getCreatedBy()),
-                new UserResponse(socialEvent.getUpdatedBy())
+                new UserResponse(socialEvent.getUpdatedBy()),
+                socialEvent.getCreatedAt()
         );
     }
 }
