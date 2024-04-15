@@ -6,6 +6,7 @@ import com.example.portalbackend.api.dto.response.mail.MailResponse;
 import com.example.portalbackend.api.usecase.AuthUseCase;
 import com.example.portalbackend.api.usecase.UserUseCase;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +14,13 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/public/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthUseCase authUseCase;
 
     private final UserUseCase userUseCase;
 
-
-    public AuthController(AuthUseCase authUseCase, UserUseCase userUseCase) {
-        this.authUseCase = authUseCase;
-        this.userUseCase = userUseCase;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody AuthLoginData authLoginData){
@@ -35,7 +32,7 @@ public class AuthController {
         return authUseCase.validateToken();
     }
 
-    @PatchMapping("/recover-password/{dni}")
+    @PutMapping("/recover-password/{dni}")
     public ResponseEntity<MailResponse> recoverPassword(@PathVariable String dni){
         return userUseCase.recoverPassword(dni);
     }

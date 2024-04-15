@@ -5,6 +5,7 @@ import com.example.portalbackend.domain.entity.Role;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.service.spec.IRoleService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,10 @@ import java.util.List;
 
 @Service
 @Transactional()
+@RequiredArgsConstructor
 public class RoleService implements IRoleService {
-    private final RoleRepository roleRepository;
 
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+    private final RoleRepository roleRepository;
 
     @Override
     @Transactional(readOnly = true)

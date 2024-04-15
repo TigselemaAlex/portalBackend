@@ -23,7 +23,7 @@ public class CustomUserDetails extends User implements UserDetails {
         this.setSurnames(user.getSurnames());
         this.username = user.getDni();
         this.password = user.getPassword();
-
+        this.setActive(user.getActive());
         List<GrantedAuthority> auths = new ArrayList<>();
         for (AuthRole role : user.getAuthRoles()) {
             auths.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().getName()));
@@ -63,6 +63,6 @@ public class CustomUserDetails extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return getActive();
     }
 }

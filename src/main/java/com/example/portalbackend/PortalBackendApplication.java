@@ -15,7 +15,7 @@ public class PortalBackendApplication {
     }
 
 
-    @Bean
+   /* @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -25,6 +25,6 @@ public class PortalBackendApplication {
                         .allowedOrigins("http://localhost:4200");
             }
         };
-    }
+    }*/
 
 }

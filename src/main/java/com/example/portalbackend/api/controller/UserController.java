@@ -5,6 +5,7 @@ import com.example.portalbackend.api.dto.request.user.UserUpdateData;
 import com.example.portalbackend.api.usecase.UserUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,13 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/protected/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserUseCase userUseCase;
-
-    public UserController(UserUseCase userUseCase) {
-        this.userUseCase = userUseCase;
-    }
 
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAll(
@@ -48,7 +46,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<CustomResponse<?>> update(@Valid @RequestBody UserUpdateData user, @PathVariable Long id) {
         return userUseCase.update(user, id);
     }
@@ -66,7 +64,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping(value = "/{id}/reactivate")
+    @PutMapping(value = "/{id}/reactivate")
     public ResponseEntity<CustomResponse<?>> reactivate(@PathVariable Long id) {
         return userUseCase.reactivate(id);
     }

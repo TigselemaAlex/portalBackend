@@ -6,6 +6,7 @@ import com.example.portalbackend.domain.entity.Passage;
 import com.example.portalbackend.domain.repository.PassageRepository;
 import com.example.portalbackend.service.spec.IPassageService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,10 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PassageService implements IPassageService {
 
     private final PassageRepository passageRepository;
-
-    public PassageService(PassageRepository passageRepository) {
-        this.passageRepository = passageRepository;
-    }
 
     @Override
     public Passage create(PassageCreateData passage) {

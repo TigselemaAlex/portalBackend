@@ -6,6 +6,7 @@ import com.example.portalbackend.domain.repository.ResidenceRepository;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.domain.repository.UserRepository;
 import com.example.portalbackend.service.spec.IDashboardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class DashboardService implements IDashboardService {
 
     private final UserRepository userRepository;
@@ -21,12 +23,6 @@ public class DashboardService implements IDashboardService {
     private final PassageRepository passageRepository;
     private final ResidenceRepository residenceRepository;
 
-    public DashboardService(UserRepository userRepository, RoleRepository roleRepository, PassageRepository passageRepository, ResidenceRepository residenceRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passageRepository = passageRepository;
-        this.residenceRepository = residenceRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)

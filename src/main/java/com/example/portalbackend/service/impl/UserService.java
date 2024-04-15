@@ -12,6 +12,7 @@ import com.example.portalbackend.domain.repository.UserRoleRepository;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.user.UserUtil;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,21 +25,14 @@ import java.util.HashSet;
 import java.util.List;
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService implements IUserService {
-
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-
-        this.userRoleRepository = userRoleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional(readOnly = true)

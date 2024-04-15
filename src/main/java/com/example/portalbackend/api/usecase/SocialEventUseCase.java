@@ -8,6 +8,7 @@ import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.service.spec.ISocialEventService;
+import com.example.portalbackend.util.calendar.CalendarUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -34,26 +35,21 @@ public class SocialEventUseCase extends AbstractUseCase{
                                                                final String date,
                                                                final MultipartFile image,
                                                                final Long createdBy) throws IOException, FileUploadException {
-        SocialEventCreateData data = new SocialEventCreateData(title, description, place, getCalendar(date), image, createdBy);
+        SocialEventCreateData data = new SocialEventCreateData(title, description, place, CalendarUtil.getCalendar(date), image, createdBy);
         SocialEventResponse response = new SocialEventResponse(socialEventService.create(data));
         return customResponseBuilder.build(HttpStatus.CREATED, "Evento social creado exitosamente", response);
     }
 
     public ResponseEntity<CustomResponse<?>> findAll(String from, String to, String title,Pageable pageable){
         Page<SocialEventResponse> socialEventResponses = socialEventService
-                .findAll(getCalendar(from),
-                        getCalendar(to), title,pageable)
+                .findAll(CalendarUtil.getCalendar(from),
+                        CalendarUtil.getCalendar(to), title,pageable)
                 .map(SocialEventResponse::new);
         PageResponse response = new PageResponse(socialEventResponses);
         return customResponseBuilder.build(HttpStatus.OK, "Evento social obtenido exitosamente", response);
     }
 
-    private Calendar getCalendar(String date){
-        if (date == null || date.isEmpty()) return null;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(Long.parseLong(date));
-        return calendar;
-    }
+
 
     public ResponseEntity<CustomResponse<?>> updateSocialEvent(final Long id,
                                                                final String title,
@@ -63,7 +59,7 @@ public class SocialEventUseCase extends AbstractUseCase{
                                                                final MultipartFile image,
                                                                final Boolean isImageUpdated,
                                                                final Long updatedBy) throws IOException, FileUploadException {
-        SocialEventUpdateData data = new SocialEventUpdateData(title, description, place, getCalendar(date), image, isImageUpdated, updatedBy);
+        SocialEventUpdateData data = new SocialEventUpdateData(title, description, place, CalendarUtil.getCalendar(date), image, isImageUpdated, updatedBy);
         SocialEventResponse response = new SocialEventResponse(socialEventService.update(id, data));
         return customResponseBuilder.build(HttpStatus.OK, "Evento social actualizado exitosamente", response);
     }

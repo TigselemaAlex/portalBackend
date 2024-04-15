@@ -10,10 +10,12 @@ import com.example.portalbackend.service.spec.ISocialEventService;
 import com.example.portalbackend.service.spec.IUserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -21,6 +23,7 @@ import java.util.Date;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SocialEventService implements ISocialEventService {
 
 
@@ -29,12 +32,6 @@ public class SocialEventService implements ISocialEventService {
     private final IFileService fileService;
 
     private final String BUCKET_URL = "https://portal-de-la-vina-bucket.s3.us-east-2.amazonaws.com/";
-
-    public SocialEventService(SocialEventRepository socialEventRepository, IUserService userService, IFileService fileService) {
-        this.socialEventRepository = socialEventRepository;
-        this.userService = userService;
-        this.fileService = fileService;
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -68,12 +65,19 @@ public class SocialEventService implements ISocialEventService {
                 .updatedBy(userService.findById(socialEvent.createdBy()))
                 .build();
         String fileName = "";
-        if (socialEvent.image() != null && socialEvent.image().getSize() > 0) {
-            fileName = BUCKET_URL +  fileService.uploadFile(socialEvent.image());
-        }
-        newSocialEvent.setImageUrl(  fileName);
-        newSocialEvent.setFileName(fileName);
+        updateFile(newSocialEvent, fileName, socialEvent.image());
         return socialEventRepository.save(newSocialEvent);
+    }
+
+    private void updateFile(SocialEvent newSocialEvent, String fileName, MultipartFile image) throws FileUploadException, IOException {
+        if (image != null && image.getSize() > 0) {
+            fileName = fileService.uploadFile(image);
+            newSocialEvent.setImageUrl(BUCKET_URL + fileName);
+            newSocialEvent.setFileName(fileName);
+        }else{
+            newSocialEvent.setImageUrl(fileName);
+            newSocialEvent.setFileName(fileName);
+        }
     }
 
     @Override
@@ -86,13 +90,8 @@ public class SocialEventService implements ISocialEventService {
         socialEventToUpdate.setUpdatedBy(userService.findById(socialEvent.updatedBy()));
         if (socialEvent.isImageUpdated()) {
             String fileName = "";
-            if (socialEvent.image() != null && socialEvent.image().getSize() > 0) {
-                fileName = BUCKET_URL + fileService.uploadFile(socialEvent.image());
-            }else{
-                fileService.delete(socialEventToUpdate.getFileName());
-            }
-            socialEventToUpdate.setImageUrl(fileName);
-            socialEventToUpdate.setFileName(fileName);
+            fileService.delete(socialEventToUpdate.getFileName());
+            updateFile(socialEventToUpdate, fileName, socialEvent.image());
         }
         return socialEventRepository.save(socialEventToUpdate);
     }

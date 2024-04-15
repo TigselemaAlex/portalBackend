@@ -16,7 +16,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAllByNamesContainingIgnoreCaseOrSurnamesContainingIgnoreCaseOrDniContainingIgnoreCase(String names, String surnames, String dni, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE u.active = true AND (u.names LIKE %:names% OR u.surnames LIKE %:surnames% OR u.dni LIKE %:dni%)")
+    @Query("SELECT u FROM User u WHERE u.active = true AND " +
+            "(lower(u.names) LIKE lower(concat('%',:names,'%')) OR " +
+            "lower(u.surnames) LIKE lower(concat('%',:surnames,'%')) OR " +
+            "lower(u.dni) LIKE lower(concat('%',:dni,'%')))")
     List<User> findAllActive(String names, String surnames, String dni);
 
     Optional<User> findByDni(String dni);

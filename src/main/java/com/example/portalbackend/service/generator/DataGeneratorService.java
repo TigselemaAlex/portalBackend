@@ -1,5 +1,7 @@
 package com.example.portalbackend.service.generator;
 
+import com.example.portalbackend.api.dto.request.guard.GuardCreateData;
+import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityCreateData;
 import com.example.portalbackend.api.dto.request.parking.ParkingCreateData;
 import com.example.portalbackend.api.dto.request.parking_group.ParkingGroupCreateData;
 import com.example.portalbackend.api.dto.request.parking_type.ParkingTypeCreateData;
@@ -8,20 +10,18 @@ import com.example.portalbackend.api.dto.request.residence.ResidenceCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceUpdateData;
 import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateData;
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
-import com.example.portalbackend.domain.entity.Passage;
-import com.example.portalbackend.domain.entity.Role;
-import com.example.portalbackend.domain.entity.SocialEvent;
+import com.example.portalbackend.api.usecase.GuardActivityUseCase;
+import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.exception.FileUploadException;
+import com.example.portalbackend.domain.repository.GuardRepository;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.domain.repository.SocialEventRepository;
 import com.example.portalbackend.service.impl.PassageService;
 import com.example.portalbackend.service.impl.ResidenceService;
 import com.example.portalbackend.service.impl.UserService;
-import com.example.portalbackend.service.spec.IParkingGroupService;
-import com.example.portalbackend.service.spec.IParkingService;
-import com.example.portalbackend.service.spec.IParkingTypeService;
-import com.example.portalbackend.service.spec.ISocialEventService;
+import com.example.portalbackend.service.spec.*;
 import com.example.portalbackend.util.enumerate.ParkingStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DataGeneratorService {
 
     private final RoleRepository roleRepository;
@@ -42,18 +43,9 @@ public class DataGeneratorService {
     private final ISocialEventService socialEventService;
     private final IParkingService parkingService;
     private final SocialEventRepository socialEventRepository;
-
-    public DataGeneratorService(RoleRepository roleRepository, UserService userService, PassageService passageService, ResidenceService residenceService, IParkingTypeService parkingTypeService, IParkingGroupService parkingGroupService, ISocialEventService socialEventService, IParkingService parkingService, SocialEventRepository socialEventRepository) {
-        this.roleRepository = roleRepository;
-        this.userService = userService;
-        this.passageService = passageService;
-        this.residenceService = residenceService;
-        this.parkingTypeService = parkingTypeService;
-        this.parkingGroupService = parkingGroupService;
-        this.socialEventService = socialEventService;
-        this.parkingService = parkingService;
-        this.socialEventRepository = socialEventRepository;
-    }
+    private final IGuardService guardService;
+    private final GuardRepository guardRepository;
+    private final IGuardActivityService guardActivityService;
 
     public void generateRoles() {
         System.out.println("Generating roles");
@@ -1740,6 +1732,86 @@ public class DataGeneratorService {
         Calendar calendar = Calendar.getInstance();
         calendar.set(years, month, date, hour, minute);
         return calendar;
+    }
+
+    public void generateGuards() {
+        System.out.println("Generating guards");
+        List<GuardCreateData> createData = List.of(
+                new GuardCreateData(
+                        "Juan Perez",
+                        "1234567890",
+                        null,
+                        "0987654321"),
+                new GuardCreateData(
+                        "Pedro Perez",
+                        "1234567891",
+                        null,
+                        "0987654322"),
+                new GuardCreateData(
+                        "Maria Perez",
+                        "1234567892",
+                        null,
+                        "0987654323"),
+                new GuardCreateData(
+                        "Jose Perez",
+                        "1234567893",
+                        null,
+                        "0987654324"),
+                new GuardCreateData(
+                        "Luis Perez",
+                        "1234567894",
+                        null,
+                        "0987654325"),
+                new GuardCreateData(
+                        "Ana Perez",
+                        "1234567895",
+                        null,
+                        "0987654326")
+        );
+        createData.forEach(guard -> {
+            try {
+                Guard guardSaved = guardService.create(guard);
+                guardSaved.setPhotoUrl("https://img.freepik.com/foto-gratis/retrato-guardia-seguridad-masculino-cerca-alambre-puas_23-2150368759.jpg?size=626&ext=jpg&ga=GA1.1.1395880969.1711843200&semt=ais");
+                guardRepository.save(guardSaved);
+            } catch (IOException | FileUploadException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void generateGuardActivities(){
+        System.out.println("Generating guard activities");
+        List<GuardActivityCreateData> guardActivities = List.of(
+                new GuardActivityCreateData(
+                        "Rondas",
+                        "Rondas de seguridad en el pasaje 1",
+                        getCalendarFromCustomDate(2024, 4, 12, 14, 0).getTimeInMillis(),
+                        getCalendarFromCustomDate(2024, 4, 12, 15, 0).getTimeInMillis(),
+                        1L,
+                        1L),
+                new GuardActivityCreateData(
+                        "Rondas",
+                        "Rondas de seguridad en el pasaje 2",
+                        getCalendarFromCustomDate(2024, 4, 13, 14, 0).getTimeInMillis(),
+                        getCalendarFromCustomDate(2024, 4, 13, 15, 0).getTimeInMillis(),
+                        2L,
+                        1L),
+                new GuardActivityCreateData(
+                        "Rondas",
+                        "Rondas de seguridad en el pasaje 3",
+                        getCalendarFromCustomDate(2024, 4, 14, 14, 0).getTimeInMillis(),
+                        getCalendarFromCustomDate(2024, 4, 14, 15, 0).getTimeInMillis(),
+                        1L,
+                        1L),
+                new GuardActivityCreateData(
+                        "Rondas",
+                        "Rondas de seguridad en el pasaje 4",
+                        getCalendarFromCustomDate(2024, 4, 15, 14, 0).getTimeInMillis(),
+                        getCalendarFromCustomDate(2024, 4, 15, 15, 0).getTimeInMillis(),
+                        2L,
+                        1L)
+        );
+        guardActivities.forEach(guardActivityService::create);
     }
 
 }

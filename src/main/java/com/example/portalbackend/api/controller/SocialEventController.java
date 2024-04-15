@@ -3,6 +3,7 @@ package com.example.portalbackend.api.controller;
 import com.example.portalbackend.api.usecase.SocialEventUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.domain.exception.FileUploadException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,11 +15,9 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/protected/social-event")
+@RequiredArgsConstructor
 public class SocialEventController {
     private final SocialEventUseCase socialEventUseCase;
-    public SocialEventController(SocialEventUseCase socialEventUseCase) {
-        this.socialEventUseCase = socialEventUseCase;
-    }
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAll(@RequestParam(defaultValue = "") String from,
                                                      @RequestParam(defaultValue = "") String to,

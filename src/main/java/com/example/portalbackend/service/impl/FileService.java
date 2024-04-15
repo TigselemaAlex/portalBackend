@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.portalbackend.domain.exception.FileDownloadException;
 import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.service.spec.IFileService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,20 +20,13 @@ import java.util.Calendar;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class FileService implements IFileService {
 
     @Value("${aws.bucket.name}")
     private String bucketName;
 
-
-
-
     private final AmazonS3 amazonS3;
-
-    public FileService(AmazonS3 amazonS3) {
-        this.amazonS3 = amazonS3;
-    }
-
 
     @Override
     public String uploadFile(MultipartFile multipartFile) throws FileUploadException, IOException {

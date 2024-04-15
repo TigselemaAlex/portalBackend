@@ -6,6 +6,7 @@ import com.example.portalbackend.domain.entity.ParkingType;
 import com.example.portalbackend.domain.repository.ParkingTypeRepository;
 import com.example.portalbackend.service.spec.IParkingTypeService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +14,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ParkingTypeService implements IParkingTypeService {
 
     private final ParkingTypeRepository parkingTypeRepository;
 
-    public ParkingTypeService(ParkingTypeRepository parkingTypeRepository) {
-        this.parkingTypeRepository = parkingTypeRepository;
-    }
 
     @Override
     public ParkingType create(ParkingTypeCreateData data) {

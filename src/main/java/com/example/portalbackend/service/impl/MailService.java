@@ -8,6 +8,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class MailService implements IMailService {
 
     private final JavaMailSender sender;
     private final Configuration config;
 
-    public MailService(JavaMailSender sender, Configuration config) {
-        this.sender = sender;
-        this.config = config;
-    }
 
     @Override
     public MailResponse sendMail(User user, String newPassword) {
