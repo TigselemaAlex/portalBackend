@@ -6,8 +6,9 @@ import com.example.portalbackend.util.enumerate.GuardActivityStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface GuardActivityRepository extends JpaRepository<GuardActivity, Long> {
+public interface GuardActivityRepository extends JpaRepository<GuardActivity, Long>, JpaSpecificationExecutor<GuardActivity> {
     Long countByGuardAndStatus(Guard guard, GuardActivityStatus status);
     Page<GuardActivity> findAllBySubjectContainingIgnoreCase(String subject, Pageable pageable);
 }

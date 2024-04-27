@@ -16,7 +16,7 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
         System.out.println("Loading data");
-        dataGeneratorService.generateRoles();
+        /*dataGeneratorService.generateRoles();
         dataGeneratorService.generateUsers();
         dataGeneratorService.generatePassages();
         dataGeneratorService.generateResidences();
@@ -27,5 +27,7 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
         dataGeneratorService.generateSocialEvents();
         dataGeneratorService.generateGuards();
         dataGeneratorService.generateGuardActivities();
+        dataGeneratorService.generateIncidentTypes();*/
+        System.out.println("Data loaded");
     }
 }

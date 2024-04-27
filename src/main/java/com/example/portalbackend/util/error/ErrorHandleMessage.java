@@ -15,6 +15,12 @@ public class ErrorHandleMessage {
         if (key.contains("dni")){
             return key.replaceAll("dni", "D.N.I.");
         }
+        if (key.contains("phone")){
+            return key.replaceAll("phone", "teléfono");
+        }
+        if (key.contains("severity")){
+            return key.replaceAll("severity", "color");
+        }
         return key;
     }
 }

@@ -4,6 +4,7 @@ import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityCre
 import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityUpdateData;
 import com.example.portalbackend.api.usecase.GuardActivityUseCase;
 import com.example.portalbackend.common.CustomResponse;
+import com.example.portalbackend.util.enumerate.GuardActivityStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +22,19 @@ public class GuardActivityController {
 
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAll(
-            @RequestParam(defaultValue = "") String subject,
+            @RequestParam(required = false) String subject,
+            @RequestParam(required = false) Long start,
+            @RequestParam(required = false) Long end,
+            @RequestParam(required = false) Long guard,
+            @RequestParam(required = false) Long createdBy,
+            @RequestParam(required = false) GuardActivityStatus status,
             @PageableDefault(
                     size = 10,
                     sort = "createdAt",
                     direction = Sort.Direction.DESC)
             Pageable pageable
     ){
-        return guardActivityUseCase.findAll(subject, pageable);
+        return guardActivityUseCase.findAll(subject, start, end, status, guard, createdBy, pageable);
     }
 
     @PostMapping

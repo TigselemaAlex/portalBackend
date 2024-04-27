@@ -4,6 +4,7 @@ import com.example.portalbackend.util.enumerate.GuardIncidentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -27,5 +28,13 @@ public class GuardIncident extends AbstractEntity{
     @ManyToOne
     private IncidentType type;
     @OneToMany(mappedBy = "incident", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IncidentEvidence> evidences;
+    private List<IncidentEvidence> evidences = new ArrayList<>();
+
+    public void addEvidence(IncidentEvidence evidence){
+        if (this.evidences == null){
+            this.evidences = new ArrayList<>();
+        }
+        this.evidences.add(evidence);
+        evidence.setIncident(this);
+    }
 }

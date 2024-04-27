@@ -11,7 +11,8 @@ public record GuardResponse(
         Boolean active,
         Long pendingActivities,
         Long inProgressActivities,
-        Long finishedActivities
+        Long finishedActivities,
+        Long incompleteActivities
 
 ) {
 
@@ -25,11 +26,12 @@ public record GuardResponse(
                 guard.getActive(),
                 0L,
                 0L,
+                0L,
                 0L
         );
     }
 
-    public GuardResponse(Guard guard, Long pendingActivities, Long inProgressActivities, Long finishedActivities){
+    public GuardResponse(Guard guard, Long pendingActivities, Long inProgressActivities, Long finishedActivities, Long incompleteActivities){
         this(
                 guard.getId(),
                 guard.getDni(),
@@ -39,7 +41,8 @@ public record GuardResponse(
                 guard.getActive(),
                 pendingActivities,
                 inProgressActivities,
-                finishedActivities
+                finishedActivities,
+                incompleteActivities
         );
     }
 }

@@ -2,6 +2,7 @@ package com.example.portalbackend.service.generator;
 
 import com.example.portalbackend.api.dto.request.guard.GuardCreateData;
 import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityCreateData;
+import com.example.portalbackend.api.dto.request.incident_type.IncidentTypeCreateData;
 import com.example.portalbackend.api.dto.request.parking.ParkingCreateData;
 import com.example.portalbackend.api.dto.request.parking_group.ParkingGroupCreateData;
 import com.example.portalbackend.api.dto.request.parking_type.ParkingTypeCreateData;
@@ -10,7 +11,6 @@ import com.example.portalbackend.api.dto.request.residence.ResidenceCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceUpdateData;
 import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateData;
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
-import com.example.portalbackend.api.usecase.GuardActivityUseCase;
 import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.domain.repository.GuardRepository;
@@ -46,6 +46,7 @@ public class DataGeneratorService {
     private final IGuardService guardService;
     private final GuardRepository guardRepository;
     private final IGuardActivityService guardActivityService;
+    private final IIncidentTypeService incidentTypeService;
 
     public void generateRoles() {
         System.out.println("Generating roles");
@@ -65,580 +66,580 @@ public class DataGeneratorService {
     public void generateUsers() {
         System.out.println("Generating users");
         List<UserCreateData> users = List.of(
-            new UserCreateData(
-                    "Alex Ignacio",
-                    "Tigselema Pacheco",
-                    "alextp.dev@gmail.com",
-                    "0967205537",
-                    "1803834371",
-                    List.of(1L,2L,3L,4L,5L,6L,7L)),
-            new UserCreateData(
-                    "Ignacio",
-                    "Peralvo Carvajal",
-                    "nacho1ipc@gmail.com",
-                    "0987564147",
-                    "1710585231",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Cristian",
-                    "Castillo",
-                    "khris84k@hotmail.com",
-                    "0984925295",
-                    "1803762903",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Holger Gabriel",
-                    "Valdez Chamorro",
-                    "holgervaldez1982@hotmail.com",
-                    "0984847381",
-                    "1803480712",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jose Luis",
-                    "Jurado Campos",
-                    "joseluisjuradocampos@hotmail.com",
-                    "0983062603",
-                    "0801714866",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Juan Javier",
-                    "Chanalata Valle",
-                    "jchanalata1@gmail.com",
-                    "0999606921",
-                    "1803076247",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Lizandro Paúl",
-                    "Castillo Pérez",
-                    "lpaulcastillo@gmail.com",
-                    "0984755340",
-                    "1803773207",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Guadalupe",
-                    "Ortiz",
-                    "gabys150587@gmail.com",
-                    "0983875314",
-                    "1804146098",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Margoth Alexandra",
-                    "Castillo Ortiz",
-                    "alexacastilloor@gmail.com",
-                    "099610714",
-                    "1802725018",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Daniel",
-                    "Poveda Guaigua",
-                    "dspoveda@hotmail.com",
-                    "0999414415",
-                    "1803279460",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Elina Maribel",
-                    "Villagomez Vargas",
-                    "eeduardoguevara@gmail.com",
-                    "0999796572",
-                    "1803125093",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Edgar Fabián",
-                    "Gavilanes Montenegro",
-                    "fabiangavilanes@hotmail.es",
-                    "0939024426",
-                    "1801389758",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Luis Raúl",
-                    "Analuisa Pazmiño",
-                    "luis27_anchaluisa@yahoo.com",
-                    "0995629408",
-                    "1801027564",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Tannia",
-                    "Villegas",
-                    "tan.ybonita@hotmail.com",
-                    "0984394583",
-                    "1803624434",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Ximena Elizabeth",
-                    "Castro Miranda",
-                    "ximedu@hotmail.com",
-                    "0992932377",
-                    "1803213121",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Cesar Gabriel",
-                    "Gutierrez Murgueytio",
-                    "cesargutierrez181@hotmail.com",
-                    "0999847104",
-                    "1802942951",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Vilma Marlene",
-                    "Sanchez Castro",
-                    "vilmasanchez64@hotmail.com",
-                    "0962341964",
-                    "1801954916",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Soledad Nathalie",
-                    "Pascal Ortiz",
-                    "Soledadnpascalo@gmail.com",
-                    "0981046704",
-                    "1712259496",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Carlos Gustavo",
-                    "Tapia Córdova",
-                    "gustav2012tapiac@gmail.com",
-                    "0983508834",
-                    "1803102654",
-                    List.of(6L)),
-            new UserCreateData(
-                    "José Luis",
-                    "Banda Banda",
-                    "bandajoseluis@yahoo.es",
-                    "0984751375",
-                    "0502666852",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jeffeson Omar",
-                    "Armas Altamirano",
-                    "omararmas40@gmail.com",
-                    "0983841005",
-                    "1804347951",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Martha Cecilia",
-                    "Díaz Pulluquinga",
-                    "marti.diaz.80@live.com",
-                    "0998295883",
-                    "1801916725",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Ignacio Gonzalo",
-                    "Portero Cunlata",
-                    "ignacioportero75@gmail.com",
-                    "",
-                    "1802936474",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Wigberto",
-                    "Sanchez Peña",
-                    "wigsoft45@gmail.com",
-                    "0998384402",
-                    "1803184710",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Juan Pablo",
-                    "Freire Arias",
-                    "juanfre_1976@hotmail.com",
-                    "0992747295",
-                    "1802823490",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jose Luis",
-                    "Flores Garcés",
-                    "marcelog67@hotmail.com",
-                    "0987974372",
-                    "1802658441",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Marcelo",
-                    "Caceres",
-                    "marcelog67@hotmail.com",
-                    "0998431945",
-                    "1801725142",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Marcelo",
-                    "Torres",
-                    "marce_yerovi@hotmail.com",
-                    "0992807739",
-                    "1804113346",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Logia Soraya",
-                    "Valle Robalindo",
-                    "sori_isna@hotmail.com",
-                    "0992656678",
-                    "1802949790",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Judith Esmeralda",
-                    "Fiallos Sánchez",
-                    "esmeraldafiallos@gmail.com",
-                    "0998442136",
-                    "1801398247",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Maria Gabriela",
-                    "Diaz Rodríguez",
-                    "gaby.zaid@hotmail.com",
-                    "0997930819",
-                    "1803467172",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Mercedes",
-                    "Guevara Paredes",
-                    "gatita.guevara@gmail.com",
-                    "0985734315",
-                    "1802396901",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jimena del Rocio",
-                    "Ortuño Panoluisa",
-                    "jimekda7@yahoo.es",
-                    "0958764070",
-                    "1803122009",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Terecita Emitelia",
-                    "Salazar Sanchez",
-                    "terecita.salazasanchez@gmail.com",
-                    "0984640903",
-                    "1801356195",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Luis Alfredo",
-                    "Sánchez Sánchez",
-                    "luis_sanches_x3@hotmail.com",
-                    "0969507328",
-                    "1803838091",
-                    List.of(6L)),
-            new UserCreateData(
-                    "María Mireya",
-                    "Moreno Paredes",
-                    "mire_tebo2711@yahoo.com",
-                    "",
-                    "1720329059",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Johan Roberto",
-                    "Romero Córdova",
-                    "jjohanromero@hotmail.com",
-                    "0998693267",
-                    "0502126444",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Anibal Ruperto",
-                    "Perez Perez",
-                    "anibal_perez90@yahoo.com",
-                    "0994917003",
-                    "1802652808",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Maria Fernanda",
-                    "Ramos Vargas",
-                    "fernandaramosv16@gmail.com",
-                    "0987360487",
-                    "1803384799",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Edwin Javier",
-                    "Zamora Zamora",
-                    "zamorajz1997@gmail.com",
-                    "0988524853",
-                    "1805342571",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Fredy Miguel",
-                    "Yanez Camacho",
-                    "fedeyanez82@gmail.com",
-                    "0981253581",
-                    "0201568227",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Margoth",
-                    "Villa",
-                    "andres.alexander95@gmail.com",
-                    "0980256919",
-                    "0501076194",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Gabriela",
-                    "Pico",
-                    "gcpn1009@yahoo.es",
-                    "0993737072",
-                    "1803371045",
-                    List.of(7L)),
-            new UserCreateData(
-                    "José Manuel",
-                    "Vargas Álvarez",
-                    "jochymanuel@gmail.com",
-                    "0992576748",
-                    "1801965045",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Mary Jacqueline",
-                    "Grefa Tanguila",
-                    "jacque_01@outlook.com",
-                    "0990633345",
-                    "1805067186",
-                    List.of(6L)),
-            new UserCreateData(
-                    "José",
-                    "Migues",
-                    "caleroveronica91@yahoo.es",
-                    "0987707005",
-                    "1804765152",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Lilian Patricia",
-                    "Cordova Altamirano",
-                    "lilian011@gamail.com",
-                    "0992964500",
-                    "1802239630",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Elizabeth",
-                    "Villalva Borja",
-                    "elyvillalva@hotmail.com",
-                    "0987301245",
-                    "1802639201",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Daniel",
-                    "Andrade",
-                    "daniel2400416@gmail.com",
-                    "0992639206",
-                    "1804898334",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Marcelo",
-                    "Villegas",
-                    "flaklop@hotmail.com",
-                    "0995862757",
-                    "1803161288",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jorge Enrique",
-                    "Jordán Vaca",
-                    "jejordan1977@yahoo.com",
-                    "0998009525",
-                    "1803079761",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Anibal Geovanny",
-                    "Paredes Cabezas",
-                    "geovaparedes@gmail.com",
-                    "0999047561",
-                    "1802303568",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Mariela",
-                    "Malan",
-                    "mari3lit4@gmail.com",
-                    "",
-                    "0501647689",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Germania Lorena",
-                    "López Arroba",
-                    "gnenalopez@gmail.com",
-                    "0998549582",
-                    "1802724995",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Susana",
-                    "Bedon",
-                    "tenaz_centauro@hotmail.com",
-                    "0981625961",
-                    "1802614709",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Lourdes Maricela",
-                    "Bustos Calero",
-                    "lourdesbustos470@gmail.com",
-                    "0988564921",
-                    "1804078077",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Andrea",
-                    "Aular",
-                    "andreaaular3000@mail.com",
-                    "0983741685",
-                    "1760993574",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Gladys Margot",
-                    "Ramos López",
-                    "gladys.ramos55ec@gmail.com",
-                    "+34662084551",
-                    "1801154680",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Isabel Cristina",
-                    "Ramos López",
-                    "criss.ramos26@gmail.com",
-                    "+34652914543",
-                    "1803042603",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Marshory",
-                    "Chasi",
-                    "tifaronwil@outlook.com",
-                    "0983402282",
-                    "1720579554",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Fausto Geovanny",
-                    "Morales Solano",
-                    "fgmorales097@gmail.com",
-                    "0987822697",
-                    "1804411773",
-                    List.of(6L)),
-            new UserCreateData(
-                    "María Fernanda",
-                    "Benavides Quesada",
-                    "mafer_b7@yahoo.es",
-                    "0980309656",
-                    "1803136793",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Erika",
-                    "Morales",
-                    "noelia130810@gmail.com",
-                    "0990237243",
-                    "1803010329",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Renato",
-                    "Almache",
-                    "ralmache77@gmail.com",
-                    "032445889",
-                    "1803063047",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Jorge Luis",
-                    "Maizanche",
-                    "jluis182008@hotmail.com",
-                    "0998654142",
-                    "1804223186",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Christian",
-                    "Merino",
-                    "bettyale@hotmail.es",
-                    "0983230818",
-                    "1803324381",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Mercedes Alicia",
-                    "Urquizo Díaz",
-                    "a_urquizo@hotmail.com",
-                    "0995663741",
-                    "1802111359",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Mónica",
-                    "Verdezoto",
-                    "monaverdezoto@hotmail.com",
-                    "0984338085",
-                    "0201337094",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Gissela Alexandra",
-                    "Cevallos Portero",
-                    "alexandracevallosp@gmail.com",
-                    "0998624822",
-                    "1803386323",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Estefania Carolina",
-                    "Bravo Sánchez",
-                    "stefannia9318@gmail.com",
-                    "0998131687",
-                    "1804335709",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Carmena Graciela",
-                    "Cuzco Paredes",
-                    "gabriel22pc@gmail.com",
-                    "0998879594",
-                    "0501100515",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Sandra",
-                    "Córdova Solórzano",
-                    "sancordova@hotmail.com",
-                    "0995795633",
-                    "1103010011",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Ana Karina",
-                    "Chica Miranda",
-                    "kchicamiranda@gmail.com",
-                    "0984528642",
-                    "1500378052",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Patricio",
-                    "Campaña",
-                    "ginabarreroc@yahoo.es",
-                    "2445996",
-                    "1802266054",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Roberto",
-                    "Guzmán ",
-                    "robertogumaro@hotmail.com",
-                    "0993799739",
-                    "1103344907",
-                    List.of(7L)),
-            new UserCreateData(
-                    "William Fernando ",
-                    "Toapanta Flores",
-                    "wtoapanta_75@hotmail.com",
-                    "0984962237",
-                    "1802901841",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Edison Geovanny ",
-                    " Benalcázar Zambrano",
-                    "eddy9631@hotmail.com",
-                    "0980198492",
-                    "2300327505",
-                    List.of(7L)),
-            new UserCreateData(
-                    "Edith Narcisa ",
-                    "Pérez Zabala ",
-                    "edithperez7729@hotmail.com",
-                    "0986593013",
-                    "1712882909",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Kati del Consuelo ",
-                    "Barrionuevo Velastegui",
-                    "denisenunez2400@gmail.com",
-                    "0984610281",
-                    "1802758837",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Norma Liluana",
-                    "Garcia Villa",
-                    "nolygav@hotmail.com",
-                    "0999202826",
-                    "1802925261",
-                    List.of(6L)),
-            new UserCreateData(
-                    "JACQUELINE IBETH ",
-                    "ACARO",
-                    "jakitty26@gmail.com",
-                    "0999941779",
-                    "1803533106",
-                    List.of(6L)),
-            new UserCreateData(
-                    "Santiago Israel",
-                    "Looez Sanchez ",
-                    "sarahilopez4227@gmail.com",
-                    "0969016563",
-                    "1802988798",
-                    List.of(7L)),
+                new UserCreateData(
+                        "Alex Ignacio",
+                        "Tigselema Pacheco",
+                        "alextp.dev@gmail.com",
+                        "0967205537",
+                        "1803834371",
+                        List.of(1L, 2L, 3L, 4L, 5L, 6L, 7L)),
+                new UserCreateData(
+                        "Ignacio",
+                        "Peralvo Carvajal",
+                        "nacho1ipc@gmail.com",
+                        "0987564147",
+                        "1710585231",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Cristian",
+                        "Castillo",
+                        "khris84k@hotmail.com",
+                        "0984925295",
+                        "1803762903",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Holger Gabriel",
+                        "Valdez Chamorro",
+                        "holgervaldez1982@hotmail.com",
+                        "0984847381",
+                        "1803480712",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jose Luis",
+                        "Jurado Campos",
+                        "joseluisjuradocampos@hotmail.com",
+                        "0983062603",
+                        "0801714866",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Juan Javier",
+                        "Chanalata Valle",
+                        "jchanalata1@gmail.com",
+                        "0999606921",
+                        "1803076247",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Lizandro Paúl",
+                        "Castillo Pérez",
+                        "lpaulcastillo@gmail.com",
+                        "0984755340",
+                        "1803773207",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Guadalupe",
+                        "Ortiz",
+                        "gabys150587@gmail.com",
+                        "0983875314",
+                        "1804146098",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Margoth Alexandra",
+                        "Castillo Ortiz",
+                        "alexacastilloor@gmail.com",
+                        "099610714",
+                        "1802725018",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Daniel",
+                        "Poveda Guaigua",
+                        "dspoveda@hotmail.com",
+                        "0999414415",
+                        "1803279460",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Elina Maribel",
+                        "Villagomez Vargas",
+                        "eeduardoguevara@gmail.com",
+                        "0999796572",
+                        "1803125093",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Edgar Fabián",
+                        "Gavilanes Montenegro",
+                        "fabiangavilanes@hotmail.es",
+                        "0939024426",
+                        "1801389758",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Luis Raúl",
+                        "Analuisa Pazmiño",
+                        "luis27_anchaluisa@yahoo.com",
+                        "0995629408",
+                        "1801027564",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Tannia",
+                        "Villegas",
+                        "tan.ybonita@hotmail.com",
+                        "0984394583",
+                        "1803624434",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Ximena Elizabeth",
+                        "Castro Miranda",
+                        "ximedu@hotmail.com",
+                        "0992932377",
+                        "1803213121",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Cesar Gabriel",
+                        "Gutierrez Murgueytio",
+                        "cesargutierrez181@hotmail.com",
+                        "0999847104",
+                        "1802942951",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Vilma Marlene",
+                        "Sanchez Castro",
+                        "vilmasanchez64@hotmail.com",
+                        "0962341964",
+                        "1801954916",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Soledad Nathalie",
+                        "Pascal Ortiz",
+                        "Soledadnpascalo@gmail.com",
+                        "0981046704",
+                        "1712259496",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Carlos Gustavo",
+                        "Tapia Córdova",
+                        "gustav2012tapiac@gmail.com",
+                        "0983508834",
+                        "1803102654",
+                        List.of(6L)),
+                new UserCreateData(
+                        "José Luis",
+                        "Banda Banda",
+                        "bandajoseluis@yahoo.es",
+                        "0984751375",
+                        "0502666852",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jeffeson Omar",
+                        "Armas Altamirano",
+                        "omararmas40@gmail.com",
+                        "0983841005",
+                        "1804347951",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Martha Cecilia",
+                        "Díaz Pulluquinga",
+                        "marti.diaz.80@live.com",
+                        "0998295883",
+                        "1801916725",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Ignacio Gonzalo",
+                        "Portero Cunlata",
+                        "ignacioportero75@gmail.com",
+                        "",
+                        "1802936474",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Wigberto",
+                        "Sanchez Peña",
+                        "wigsoft45@gmail.com",
+                        "0998384402",
+                        "1803184710",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Juan Pablo",
+                        "Freire Arias",
+                        "juanfre_1976@hotmail.com",
+                        "0992747295",
+                        "1802823490",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jose Luis",
+                        "Flores Garcés",
+                        "marcelog67@hotmail.com",
+                        "0987974372",
+                        "1802658441",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Marcelo",
+                        "Caceres",
+                        "marcelog67@hotmail.com",
+                        "0998431945",
+                        "1801725142",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Marcelo",
+                        "Torres",
+                        "marce_yerovi@hotmail.com",
+                        "0992807739",
+                        "1804113346",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Logia Soraya",
+                        "Valle Robalindo",
+                        "sori_isna@hotmail.com",
+                        "0992656678",
+                        "1802949790",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Judith Esmeralda",
+                        "Fiallos Sánchez",
+                        "esmeraldafiallos@gmail.com",
+                        "0998442136",
+                        "1801398247",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Maria Gabriela",
+                        "Diaz Rodríguez",
+                        "gaby.zaid@hotmail.com",
+                        "0997930819",
+                        "1803467172",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Mercedes",
+                        "Guevara Paredes",
+                        "gatita.guevara@gmail.com",
+                        "0985734315",
+                        "1802396901",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jimena del Rocio",
+                        "Ortuño Panoluisa",
+                        "jimekda7@yahoo.es",
+                        "0958764070",
+                        "1803122009",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Terecita Emitelia",
+                        "Salazar Sanchez",
+                        "terecita.salazasanchez@gmail.com",
+                        "0984640903",
+                        "1801356195",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Luis Alfredo",
+                        "Sánchez Sánchez",
+                        "luis_sanches_x3@hotmail.com",
+                        "0969507328",
+                        "1803838091",
+                        List.of(6L)),
+                new UserCreateData(
+                        "María Mireya",
+                        "Moreno Paredes",
+                        "mire_tebo2711@yahoo.com",
+                        "",
+                        "1720329059",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Johan Roberto",
+                        "Romero Córdova",
+                        "jjohanromero@hotmail.com",
+                        "0998693267",
+                        "0502126444",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Anibal Ruperto",
+                        "Perez Perez",
+                        "anibal_perez90@yahoo.com",
+                        "0994917003",
+                        "1802652808",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Maria Fernanda",
+                        "Ramos Vargas",
+                        "fernandaramosv16@gmail.com",
+                        "0987360487",
+                        "1803384799",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Edwin Javier",
+                        "Zamora Zamora",
+                        "zamorajz1997@gmail.com",
+                        "0988524853",
+                        "1805342571",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Fredy Miguel",
+                        "Yanez Camacho",
+                        "fedeyanez82@gmail.com",
+                        "0981253581",
+                        "0201568227",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Margoth",
+                        "Villa",
+                        "andres.alexander95@gmail.com",
+                        "0980256919",
+                        "0501076194",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Gabriela",
+                        "Pico",
+                        "gcpn1009@yahoo.es",
+                        "0993737072",
+                        "1803371045",
+                        List.of(7L)),
+                new UserCreateData(
+                        "José Manuel",
+                        "Vargas Álvarez",
+                        "jochymanuel@gmail.com",
+                        "0992576748",
+                        "1801965045",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Mary Jacqueline",
+                        "Grefa Tanguila",
+                        "jacque_01@outlook.com",
+                        "0990633345",
+                        "1805067186",
+                        List.of(6L)),
+                new UserCreateData(
+                        "José",
+                        "Migues",
+                        "caleroveronica91@yahoo.es",
+                        "0987707005",
+                        "1804765152",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Lilian Patricia",
+                        "Cordova Altamirano",
+                        "lilian011@gamail.com",
+                        "0992964500",
+                        "1802239630",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Elizabeth",
+                        "Villalva Borja",
+                        "elyvillalva@hotmail.com",
+                        "0987301245",
+                        "1802639201",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Daniel",
+                        "Andrade",
+                        "daniel2400416@gmail.com",
+                        "0992639206",
+                        "1804898334",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Marcelo",
+                        "Villegas",
+                        "flaklop@hotmail.com",
+                        "0995862757",
+                        "1803161288",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jorge Enrique",
+                        "Jordán Vaca",
+                        "jejordan1977@yahoo.com",
+                        "0998009525",
+                        "1803079761",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Anibal Geovanny",
+                        "Paredes Cabezas",
+                        "geovaparedes@gmail.com",
+                        "0999047561",
+                        "1802303568",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Mariela",
+                        "Malan",
+                        "mari3lit4@gmail.com",
+                        "",
+                        "0501647689",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Germania Lorena",
+                        "López Arroba",
+                        "gnenalopez@gmail.com",
+                        "0998549582",
+                        "1802724995",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Susana",
+                        "Bedon",
+                        "tenaz_centauro@hotmail.com",
+                        "0981625961",
+                        "1802614709",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Lourdes Maricela",
+                        "Bustos Calero",
+                        "lourdesbustos470@gmail.com",
+                        "0988564921",
+                        "1804078077",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Andrea",
+                        "Aular",
+                        "andreaaular3000@mail.com",
+                        "0983741685",
+                        "1760993574",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Gladys Margot",
+                        "Ramos López",
+                        "gladys.ramos55ec@gmail.com",
+                        "+34662084551",
+                        "1801154680",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Isabel Cristina",
+                        "Ramos López",
+                        "criss.ramos26@gmail.com",
+                        "+34652914543",
+                        "1803042603",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Marshory",
+                        "Chasi",
+                        "tifaronwil@outlook.com",
+                        "0983402282",
+                        "1720579554",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Fausto Geovanny",
+                        "Morales Solano",
+                        "fgmorales097@gmail.com",
+                        "0987822697",
+                        "1804411773",
+                        List.of(6L)),
+                new UserCreateData(
+                        "María Fernanda",
+                        "Benavides Quesada",
+                        "mafer_b7@yahoo.es",
+                        "0980309656",
+                        "1803136793",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Erika",
+                        "Morales",
+                        "noelia130810@gmail.com",
+                        "0990237243",
+                        "1803010329",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Renato",
+                        "Almache",
+                        "ralmache77@gmail.com",
+                        "032445889",
+                        "1803063047",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Jorge Luis",
+                        "Maizanche",
+                        "jluis182008@hotmail.com",
+                        "0998654142",
+                        "1804223186",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Christian",
+                        "Merino",
+                        "bettyale@hotmail.es",
+                        "0983230818",
+                        "1803324381",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Mercedes Alicia",
+                        "Urquizo Díaz",
+                        "a_urquizo@hotmail.com",
+                        "0995663741",
+                        "1802111359",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Mónica",
+                        "Verdezoto",
+                        "monaverdezoto@hotmail.com",
+                        "0984338085",
+                        "0201337094",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Gissela Alexandra",
+                        "Cevallos Portero",
+                        "alexandracevallosp@gmail.com",
+                        "0998624822",
+                        "1803386323",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Estefania Carolina",
+                        "Bravo Sánchez",
+                        "stefannia9318@gmail.com",
+                        "0998131687",
+                        "1804335709",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Carmena Graciela",
+                        "Cuzco Paredes",
+                        "gabriel22pc@gmail.com",
+                        "0998879594",
+                        "0501100515",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Sandra",
+                        "Córdova Solórzano",
+                        "sancordova@hotmail.com",
+                        "0995795633",
+                        "1103010011",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Ana Karina",
+                        "Chica Miranda",
+                        "kchicamiranda@gmail.com",
+                        "0984528642",
+                        "1500378052",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Patricio",
+                        "Campaña",
+                        "ginabarreroc@yahoo.es",
+                        "2445996",
+                        "1802266054",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Roberto",
+                        "Guzmán ",
+                        "robertogumaro@hotmail.com",
+                        "0993799739",
+                        "1103344907",
+                        List.of(7L)),
+                new UserCreateData(
+                        "William Fernando ",
+                        "Toapanta Flores",
+                        "wtoapanta_75@hotmail.com",
+                        "0984962237",
+                        "1802901841",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Edison Geovanny ",
+                        " Benalcázar Zambrano",
+                        "eddy9631@hotmail.com",
+                        "0980198492",
+                        "2300327505",
+                        List.of(7L)),
+                new UserCreateData(
+                        "Edith Narcisa ",
+                        "Pérez Zabala ",
+                        "edithperez7729@hotmail.com",
+                        "0986593013",
+                        "1712882909",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Kati del Consuelo ",
+                        "Barrionuevo Velastegui",
+                        "denisenunez2400@gmail.com",
+                        "0984610281",
+                        "1802758837",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Norma Liluana",
+                        "Garcia Villa",
+                        "nolygav@hotmail.com",
+                        "0999202826",
+                        "1802925261",
+                        List.of(6L)),
+                new UserCreateData(
+                        "JACQUELINE IBETH ",
+                        "ACARO",
+                        "jakitty26@gmail.com",
+                        "0999941779",
+                        "1803533106",
+                        List.of(6L)),
+                new UserCreateData(
+                        "Santiago Israel",
+                        "Looez Sanchez ",
+                        "sarahilopez4227@gmail.com",
+                        "0969016563",
+                        "1802988798",
+                        List.of(7L)),
                 new UserCreateData(
                         "Elizabeth Fernanda ",
                         "Freire Andagoya",
@@ -701,7 +702,7 @@ public class DataGeneratorService {
                         "venuzthere@yahoo.com",
                         "0998100865",
                         "1600256653",
-                        List.of(5L,6L)),
+                        List.of(5L, 6L)),
                 new UserCreateData(
                         "Alexandra",
                         "Chávez",
@@ -1131,7 +1132,7 @@ public class DataGeneratorService {
                         List.of(6L)),
                 new UserCreateData(
                         "Paulina Elisabeth",
-                            "Díaz Rodriguez",
+                        "Díaz Rodriguez",
                         "ingzaide@hotmail.com",
                         "0990585540",
                         "1802979326",
@@ -1219,14 +1220,14 @@ public class DataGeneratorService {
                         "defazcristian3@gmail.com",
                         "0990817536",
                         "0502917123",
-                        List.of(2L,6L)),
+                        List.of(2L, 6L)),
                 new UserCreateData(
                         "Leonor Esthela",
                         "Naranjo Llango",
                         "estela.naranjo081@gmail.com",
                         "0984058324",
                         "1801160951",
-                        List.of(4L,6L)),
+                        List.of(4L, 6L)),
                 new UserCreateData(
                         "Ana",
                         "Uñug",
@@ -1283,7 +1284,7 @@ public class DataGeneratorService {
                         "0992163809",
                         "1710364876",
                         List.of(6L))
-            );
+        );
 
         users.forEach(userService::create);
     }
@@ -1325,46 +1326,46 @@ public class DataGeneratorService {
         List<ResidenceCreateData> createData = new ArrayList<>();
 
         for (int i = 1; i <= 18; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,calleCaracas.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, calleCaracas.getId()));
         }
         for (int i = 19; i <= 53; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeMaracay.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeMaracay.getId()));
         }
         for (int i = 54; i <= 61; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,calleCorrientes.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, calleCorrientes.getId()));
         }
         for (int i = 62; i <= 79; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeOsorno.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeOsorno.getId()));
         }
         for (int i = 80; i <= 97; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeIca.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeIca.getId()));
         }
         for (int i = 98; i <= 106; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,puertoPrincipe.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, puertoPrincipe.getId()));
         }
         for (int i = 107; i <= 116; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeIca.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeIca.getId()));
         }
         for (int i = 117; i <= 126; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,puertoPrincipe.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, puertoPrincipe.getId()));
         }
         for (int i = 127; i <= 153; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,calleIquique.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, calleIquique.getId()));
         }
         for (int i = 154; i <= 183; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeCorrientes.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeCorrientes.getId()));
         }
         for (int i = 184; i <= 216; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeRosario.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeRosario.getId()));
         }
         for (int i = 217; i <= 253; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,pasajeSanEstanislao.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, pasajeSanEstanislao.getId()));
         }
         for (int i = 254; i <= 288; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,calleTucuman.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, calleTucuman.getId()));
         }
         for (int i = 289; i <= 303; i++) {
-            createData.add(new ResidenceCreateData(String.valueOf(i), null,calleConcepcion.getId()));
+            createData.add(new ResidenceCreateData(String.valueOf(i), null, calleConcepcion.getId()));
         }
         createData.forEach(residenceService::save);
     }
@@ -1553,16 +1554,16 @@ public class DataGeneratorService {
 
     }
 
-    public void generateParkingTypes(){
+    public void generateParkingTypes() {
         System.out.println("Generating parking types");
         List<ParkingTypeCreateData> createData = List.of(
-                new ParkingTypeCreateData("Zona Azul", "Parqueadero ubicado en la zona azul","info" ,new BigDecimal(10)),
-                new ParkingTypeCreateData("Zona Particular", "Parqueadero ubicado en la zona particular","warning" ,new BigDecimal(10))
+                new ParkingTypeCreateData("Zona Azul", "Parqueadero ubicado en la zona azul", "info", new BigDecimal(10)),
+                new ParkingTypeCreateData("Zona Particular", "Parqueadero ubicado en la zona particular", "warning", new BigDecimal(10))
         );
         createData.forEach(parkingTypeService::create);
     }
 
-    public void generateParkingGroups(){
+    public void generateParkingGroups() {
         System.out.println("Generating parking groups");
         List<ParkingGroupCreateData> createData = List.of(
                 new ParkingGroupCreateData("G-PP1", "58px", "370px", 2L),
@@ -1599,7 +1600,7 @@ public class DataGeneratorService {
         createData.forEach(parkingGroupService::create);
     }
 
-    public void generateParkings(){
+    public void generateParkings() {
         List<ParkingCreateData> createYellowParkings = getParkingYellowCreateData();
         createYellowParkings.forEach(parkingService::create);
 
@@ -1609,102 +1610,103 @@ public class DataGeneratorService {
     }
 
 
-    private List<ParkingCreateData> getParkingYellowCreateData(){
+    private List<ParkingCreateData> getParkingYellowCreateData() {
         List<ParkingCreateData> createYellowParkings = new ArrayList<>();
         for (int i = 1; i <= 253; i++) {
-            if (i<=11){
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 1L));
-            } else if (i <=23) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 2L));
-            } else if (i<=46) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 3L));
-            } else if (i<=55) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 4L));
-            } else if (i<=60) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 5L));
-            } else if (i<=87) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 6L));
-            } else if (i<=91) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 7L));
-            } else if (i<=106) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 8L));
-            } else if (i<=118) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 9L));
-            } else if (i<=128) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 10L));
-            } else if (i<=139) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 11L));
-            } else if (i<=150) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 12L));
-            } else if (i<=161) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 13L));
-            } else if (i<=175) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 14L));
-            } else if (i<=191) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 15L));
-            } else if (i<=201) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 16L));
-            } else if (i<=237) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 17L));
-            } else if (i<=242) {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 18L));
+            if (i <= 11) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 1L));
+            } else if (i <= 23) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 2L));
+            } else if (i <= 46) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 3L));
+            } else if (i <= 55) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 4L));
+            } else if (i <= 60) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 5L));
+            } else if (i <= 87) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 6L));
+            } else if (i <= 91) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 7L));
+            } else if (i <= 106) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 8L));
+            } else if (i <= 118) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 9L));
+            } else if (i <= 128) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 10L));
+            } else if (i <= 139) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 11L));
+            } else if (i <= 150) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 12L));
+            } else if (i <= 161) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 13L));
+            } else if (i <= 175) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 14L));
+            } else if (i <= 191) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 15L));
+            } else if (i <= 201) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 16L));
+            } else if (i <= 237) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 17L));
+            } else if (i <= 242) {
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 18L));
             } else {
-                createYellowParkings.add(new ParkingCreateData("PP-"+i, ParkingStatus.AVAILABLE, 19L));
+                createYellowParkings.add(new ParkingCreateData("PP-" + i, ParkingStatus.AVAILABLE, 19L));
             }
         }
         return createYellowParkings;
     }
+
     private List<ParkingCreateData> getParkingBlueCreateData() {
         List<ParkingCreateData> createBlueParkings = new ArrayList<>();
-        for (int i= 1 ; i<= 68; i++){
-            if (i<=23){
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 20L));
-            } else if (i<=29) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 21L));
-            } else if (i<=39) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 22L));
-            } else if (i<=43) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 23L));
-            } else if (i<=50) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 24L));
-            } else if (i<=59) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 25L));
+        for (int i = 1; i <= 68; i++) {
+            if (i <= 23) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 20L));
+            } else if (i <= 29) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 21L));
+            } else if (i <= 39) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 22L));
+            } else if (i <= 43) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 23L));
+            } else if (i <= 50) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 24L));
+            } else if (i <= 59) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 25L));
             } else if (i == 60) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 26L));
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 26L));
             } else if (i == 61) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 27L));
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 27L));
             } else if (i == 62) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 28L));
-            } else if (i<=66) {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 29L));
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 28L));
+            } else if (i <= 66) {
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 29L));
             } else {
-                createBlueParkings.add(new ParkingCreateData("PA-"+i, ParkingStatus.AVAILABLE, 30L));
+                createBlueParkings.add(new ParkingCreateData("PA-" + i, ParkingStatus.AVAILABLE, 30L));
             }
         }
         return createBlueParkings;
     }
 
-    public void generateSocialEvents(){
+    public void generateSocialEvents() {
         System.out.println("Generating social events");
-        SocialEventCreateData  createData = new SocialEventCreateData("Día de la madre",
-                        "Evento para conmemorar el día de la madre",
-                        "Canchas del condominio",
-                        getCalendarFromCustomDate(2024, 4, 12, 14, 0),
-                        null,
-                        1L);
-        SocialEventCreateData  createData2 = new SocialEventCreateData("Día de la madre",
+        SocialEventCreateData createData = new SocialEventCreateData("Día de la madre",
                 "Evento para conmemorar el día de la madre",
                 "Canchas del condominio",
                 getCalendarFromCustomDate(2024, 4, 12, 14, 0),
                 null,
                 1L);
-        SocialEventCreateData  createData3 = new SocialEventCreateData("Día de la madre",
+        SocialEventCreateData createData2 = new SocialEventCreateData("Día de la madre",
                 "Evento para conmemorar el día de la madre",
                 "Canchas del condominio",
                 getCalendarFromCustomDate(2024, 4, 12, 14, 0),
                 null,
                 1L);
-        SocialEventCreateData  createData4 = new SocialEventCreateData("Día de la madre",
+        SocialEventCreateData createData3 = new SocialEventCreateData("Día de la madre",
+                "Evento para conmemorar el día de la madre",
+                "Canchas del condominio",
+                getCalendarFromCustomDate(2024, 4, 12, 14, 0),
+                null,
+                1L);
+        SocialEventCreateData createData4 = new SocialEventCreateData("Día de la madre",
                 "Evento para conmemorar el día de la madre",
                 "Canchas del condominio",
                 getCalendarFromCustomDate(2024, 4, 12, 14, 0),
@@ -1728,7 +1730,7 @@ public class DataGeneratorService {
         }
     }
 
-    private Calendar getCalendarFromCustomDate(int years, int month, int date, int hour, int minute){
+    private Calendar getCalendarFromCustomDate(int years, int month, int date, int hour, int minute) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(years, month, date, hour, minute);
         return calendar;
@@ -1738,35 +1740,107 @@ public class DataGeneratorService {
         System.out.println("Generating guards");
         List<GuardCreateData> createData = List.of(
                 new GuardCreateData(
-                        "Juan Perez",
-                        "1234567890",
+                        "Judit Guzman",
+                        "1234567896",
+                        null,
+                        "0987654327"),
+                new GuardCreateData(
+                        "Luis Guzman",
+                        "1234567897",
+                        null,
+                        "0987654328"),
+                new GuardCreateData(
+                        "Juan Rodriguez",
+                        "9876543210",
                         null,
                         "0987654321"),
                 new GuardCreateData(
-                        "Pedro Perez",
-                        "1234567891",
+                        "Pedro Sanchez",
+                        "9876543211",
                         null,
                         "0987654322"),
                 new GuardCreateData(
-                        "Maria Perez",
-                        "1234567892",
+                        "Maria Gomez",
+                        "9876543212",
                         null,
                         "0987654323"),
                 new GuardCreateData(
-                        "Jose Perez",
-                        "1234567893",
+                        "Jose Hernandez",
+                        "9876543213",
                         null,
                         "0987654324"),
                 new GuardCreateData(
-                        "Luis Perez",
-                        "1234567894",
+                        "Luis Martinez",
+                        "9876543214",
                         null,
                         "0987654325"),
                 new GuardCreateData(
-                        "Ana Perez",
-                        "1234567895",
+                        "Ana Fernandez",
+                        "9876543215",
                         null,
-                        "0987654326")
+                        "0987654326"),
+                new GuardCreateData(
+                        "Judit Gonzalez",
+                        "9876543216",
+                        null,
+                        "0987654327"),
+                new GuardCreateData(
+                        "Luis Diaz",
+                        "9876543217",
+                        null,
+                        "0987654328"),
+                new GuardCreateData(
+                        "Carla Fernandez",
+                        "9876543220",
+                        null,
+                        "0987654329"),
+                new GuardCreateData(
+                        "Manuel Lopez",
+                        "9876543221",
+                        null,
+                        "0987654330"),
+                new GuardCreateData(
+                        "Laura Martinez",
+                        "9876543222",
+                        null,
+                        "0987654331"),
+                new GuardCreateData(
+                        "David Gomez",
+                        "9876543223",
+                        null,
+                        "0987654332"),
+                new GuardCreateData(
+                        "Sofia Rodriguez",
+                        "9876543224",
+                        null,
+                        "0987654333"),
+                new GuardCreateData(
+                        "Diego Perez",
+                        "9876543225",
+                        null,
+                        "0987654334"),
+                new GuardCreateData(
+                        "Elena Hernandez",
+                        "9876543226",
+                        null,
+                        "0987654335"),
+                new GuardCreateData(
+                        "Pablo Sanchez",
+                        "9876543227",
+                        null,
+                        "0987654336"),
+                new GuardCreateData(
+                        "Lorena Gonzalez",
+                        "9876543228",
+                        null,
+                        "0987654337"),
+                new GuardCreateData(
+                        "Hector Diaz",
+                        "9876543229",
+                        null,
+                        "0987654338")
+
+
         );
         createData.forEach(guard -> {
             try {
@@ -1779,7 +1853,7 @@ public class DataGeneratorService {
         });
     }
 
-    public void generateGuardActivities(){
+    public void generateGuardActivities() {
         System.out.println("Generating guard activities");
         List<GuardActivityCreateData> guardActivities = List.of(
                 new GuardActivityCreateData(
@@ -1812,6 +1886,20 @@ public class DataGeneratorService {
                         1L)
         );
         guardActivities.forEach(guardActivityService::create);
+    }
+
+    public void generateIncidentTypes() {
+        System.out.println("Generating incident types");
+        List<IncidentTypeCreateData> createData = List.of(
+                new IncidentTypeCreateData("Robo", "Robo en el condominio", "#FF0000"),
+                new IncidentTypeCreateData("Accidente", "Accidente en el condominio", "#FFA500 "),
+                new IncidentTypeCreateData("Incendio", "Incendio en el condominio", "#FF4500"),
+                new IncidentTypeCreateData("Intruso", "Intruso en el condominio", "#8A2BE2"),
+                new IncidentTypeCreateData("Vandalismo", "Vandalismo en el condominio", "#FF69B4"),
+                new IncidentTypeCreateData("Ruido", "Ruido en el condominio", "#808000"),
+                new IncidentTypeCreateData("Otro", "Otro tipo de incidente en el condominio", "#A9A9A9")
+        );
+        createData.forEach(incidentTypeService::addIncidentType);
     }
 
 }

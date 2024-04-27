@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public record GuardIncidentCreateData(
+        @NotBlank(message = "El asunto no puede estar vacío")
+        String subject,
         @NotBlank(message = "La descripción no puede estar vacía")
         String  description,
         @NotNull(message = "La fecha no puede estar vacía")
@@ -16,8 +18,6 @@ public record GuardIncidentCreateData(
         Long guard,
         @NotNull(message = "El tipo no puede estar vacío")
         Long type,
-        @NotNull(message = "El estado no puede estar vacío")
-        GuardIncidentStatus status,
         List<MultipartFile> files
 ) {
 }

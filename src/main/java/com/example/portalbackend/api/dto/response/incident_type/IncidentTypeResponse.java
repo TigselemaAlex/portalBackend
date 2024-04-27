@@ -6,7 +6,8 @@ public record IncidentTypeResponse(
         Long id,
         String name,
         String severity,
-        String description
+        String description,
+        Boolean active
 ) {
 
     public IncidentTypeResponse(IncidentType incidentType){
@@ -14,7 +15,8 @@ public record IncidentTypeResponse(
                 incidentType.getId(),
                 incidentType.getName(),
                 incidentType.getSeverity(),
-                incidentType.getDescription()
+                incidentType.getDescription(),
+                incidentType.getActive()
         );
     }
 }

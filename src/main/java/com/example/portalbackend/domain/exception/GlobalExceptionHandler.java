@@ -148,10 +148,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lo sentimos, ocurrió un error inesperado. Por favor, inténtelo de nuevo más tarde.");
-    }
+
 
 }
 

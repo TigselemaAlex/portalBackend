@@ -40,7 +40,8 @@ public class GuardUseCase extends AbstractUseCase{
             Long pendingActivities = guardActivityService.countByGuardAndStatus(guard, GuardActivityStatus.PENDING);
             Long inProgressActivities = guardActivityService.countByGuardAndStatus(guard, GuardActivityStatus.IN_PROGRESS);
             Long finishedActivities = guardActivityService.countByGuardAndStatus(guard, GuardActivityStatus.FINISHED);
-            return new GuardResponse(guard, pendingActivities, inProgressActivities, finishedActivities);
+            Long incompleteActivities = guardActivityService.countByGuardAndStatus(guard, GuardActivityStatus.INCOMPLETE);
+            return new GuardResponse(guard, pendingActivities, inProgressActivities, finishedActivities, incompleteActivities);
         });
         PageResponse response = new PageResponse(guards);
         return customResponseBuilder.build(HttpStatus.OK, "Listado de guardias obtenido exitosamente", response);

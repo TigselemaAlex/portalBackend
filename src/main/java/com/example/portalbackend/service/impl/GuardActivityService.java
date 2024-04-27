@@ -6,6 +6,7 @@ import com.example.portalbackend.domain.entity.Guard;
 import com.example.portalbackend.domain.entity.GuardActivity;
 import com.example.portalbackend.domain.entity.User;
 import com.example.portalbackend.domain.repository.GuardActivityRepository;
+import com.example.portalbackend.domain.specifications.GuardActivitySpecifications;
 import com.example.portalbackend.service.spec.IGuardActivityService;
 import com.example.portalbackend.service.spec.IGuardService;
 import com.example.portalbackend.service.spec.IUserService;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Calendar;
 
 @Service
 @Transactional
@@ -51,8 +54,12 @@ public class GuardActivityService implements IGuardActivityService {
     }
 
     @Override
-    public Page<GuardActivity> findAll(String subject, Pageable pageable) {
-        return guardActivityRepository.findAllBySubjectContainingIgnoreCase(subject, pageable);
+    public Page<GuardActivity> findAll(String subject, Long start, Long end, GuardActivityStatus status, Long guard, Long createdBy, Pageable pageable) {
+        Guard guardEntity = null == guard ? null : guardService.findById(guard);
+        User user = null == createdBy ? null: userService.findById(createdBy);
+        Calendar startCalendar = null == start ? null : CalendarUtil.getCalendar(start);
+        Calendar endCalendar = null == end ? null : CalendarUtil.getCalendar(end);
+        return guardActivityRepository.findAll(GuardActivitySpecifications.withDynamicFilters(subject, startCalendar, endCalendar, status, guardEntity, user), pageable);
     }
 
     @Override
