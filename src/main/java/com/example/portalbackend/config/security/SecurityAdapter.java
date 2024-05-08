@@ -54,6 +54,7 @@ public class SecurityAdapter {
                         authorize -> authorize
                                     .requestMatchers("/public/auth/login").permitAll()
                                     .requestMatchers("/public/auth/recover-password/**").permitAll()
+                                    .requestMatchers("/ws/**").permitAll()
                                     .requestMatchers("/public/auth/validate-token").authenticated()
                                     .requestMatchers("/protected/**").authenticated()
                                     .anyRequest().denyAll()
@@ -94,9 +95,11 @@ public class SecurityAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             var cors = new CorsConfiguration();
-            cors.setAllowedOrigins(List.of("http://localhost:4200"));
+
+            cors.setAllowedOriginPatterns(List.of("*"));
             cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH" ,"OPTIONS"));
             cors.setAllowedHeaders(List.of("*"));
+            cors.setAllowCredentials(true);
             return cors;
         };
     }

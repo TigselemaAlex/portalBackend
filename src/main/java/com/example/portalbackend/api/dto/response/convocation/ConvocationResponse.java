@@ -9,26 +9,32 @@ import java.util.Calendar;
 public record ConvocationResponse(
         Long id,
         String subject,
+        String description,
         Calendar date,
         ConvocationType type,
         String place,
         Calendar attendanceDeadline,
         UserResponse createdBy,
         UserResponse updatedBy,
-        Boolean finalized
+        Boolean finalized,
+        Integer totalPresent,
+        Integer totalMissing
 ) {
 
-    public ConvocationResponse(Convocation convocation) {
+    public ConvocationResponse(Convocation convocation, Integer totalPresents, Integer totalMissing) {
         this(
                 convocation.getId(),
                 convocation.getSubject(),
+                convocation.getDescription(),
                 convocation.getDate(),
                 convocation.getType(),
                 convocation.getPlace(),
                 convocation.getAttendanceDeadline(),
                 convocation.getCreatedBy() == null ? null : new UserResponse(convocation.getCreatedBy()),
                 convocation.getUpdatedBy() == null ? null : new UserResponse(convocation.getUpdatedBy()),
-                convocation.getFinalized()
+                convocation.getFinalized(),
+                totalPresents,
+                totalMissing
         );
     }
 }

@@ -21,6 +21,7 @@ public class Convocation extends AbstractEntity{
     @Column(columnDefinition = "TEXT")
     private String description;
     private String place;
+    private String code;
     private Calendar date;
     private ConvocationType type;
     private Calendar attendanceDeadline;

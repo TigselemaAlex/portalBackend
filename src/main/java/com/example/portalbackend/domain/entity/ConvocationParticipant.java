@@ -16,6 +16,7 @@ public class ConvocationParticipant extends AbstractEntity {
 
     private Boolean attendance;
     private Calendar attendanceDate;
+    private String participant;
     @ManyToOne
     private Residence residence;
     @ManyToOne

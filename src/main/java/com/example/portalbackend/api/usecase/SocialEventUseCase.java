@@ -3,6 +3,7 @@ package com.example.portalbackend.api.usecase;
 import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateData;
 import com.example.portalbackend.api.dto.request.social_event.SocialEventUpdateData;
 import com.example.portalbackend.api.dto.response.PageResponse;
+import com.example.portalbackend.api.dto.response.notification.NotificationResponse;
 import com.example.portalbackend.api.dto.response.social_event.SocialEventResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,11 +26,16 @@ import java.util.Objects;
 @Component
 public class SocialEventUseCase extends AbstractUseCase{
 
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     private final ISocialEventService socialEventService;
-    protected SocialEventUseCase(CustomResponseBuilder customResponseBuilder, ISocialEventService socialEventService) {
+    protected SocialEventUseCase(CustomResponseBuilder customResponseBuilder, SimpMessagingTemplate simpMessagingTemplate, ISocialEventService socialEventService) {
         super(customResponseBuilder);
+        this.simpMessagingTemplate = simpMessagingTemplate;
         this.socialEventService = socialEventService;
     }
+
+
     public ResponseEntity<CustomResponse<?>> createSocialEvent(final String title,
                                                                final String description,
                                                                final String place,
@@ -37,6 +44,7 @@ public class SocialEventUseCase extends AbstractUseCase{
                                                                final Long createdBy) throws IOException, FileUploadException {
         SocialEventCreateData data = new SocialEventCreateData(title, description, place, CalendarUtil.getCalendar(date), image, createdBy);
         SocialEventResponse response = new SocialEventResponse(socialEventService.create(data));
+        simpMessagingTemplate.convertAndSend("/topic/notification", new NotificationResponse("Evento social", "Se ha creado un nuevo evento social creado" , response.createdBy().names() + " " + response.createdBy().surnames()));
         return customResponseBuilder.build(HttpStatus.CREATED, "Evento social creado exitosamente", response);
     }
 
@@ -48,8 +56,6 @@ public class SocialEventUseCase extends AbstractUseCase{
         PageResponse response = new PageResponse(socialEventResponses);
         return customResponseBuilder.build(HttpStatus.OK, "Evento social obtenido exitosamente", response);
     }
-
-
 
     public ResponseEntity<CustomResponse<?>> updateSocialEvent(final Long id,
                                                                final String title,

@@ -4,6 +4,7 @@ import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityCre
 import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityUpdateData;
 import com.example.portalbackend.api.dto.response.PageResponse;
 import com.example.portalbackend.api.dto.response.guard_activity.GuardActivityResponse;
+import com.example.portalbackend.api.dto.response.notification.NotificationResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.GuardActivity;
@@ -13,20 +14,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GuardActivityUseCase extends AbstractUseCase{
 
+    private final SimpMessagingTemplate simpMessagingTemplate;
     private final IGuardActivityService guardActivityService;
-    protected GuardActivityUseCase(CustomResponseBuilder customResponseBuilder, IGuardActivityService guardActivityService) {
+    protected GuardActivityUseCase(CustomResponseBuilder customResponseBuilder, SimpMessagingTemplate simpMessagingTemplate, IGuardActivityService guardActivityService) {
         super(customResponseBuilder);
+        this.simpMessagingTemplate = simpMessagingTemplate;
         this.guardActivityService = guardActivityService;
     }
 
     public ResponseEntity<CustomResponse<?>> createActivity(GuardActivityCreateData data) {
         GuardActivity guardActivity = guardActivityService.create(data);
         GuardActivityResponse response = new GuardActivityResponse(guardActivity);
+        simpMessagingTemplate.convertAndSend("/topic/notification", new NotificationResponse("Actividad de guardianía", "Se ha creado una nueva actividad", guardActivity.getCreatedBy().getNames()+ " " + guardActivity.getCreatedBy().getSurnames()));
         return customResponseBuilder.build(HttpStatus.CREATED, "Actividad de guardianía creada exitosamente", response);
     }
 
