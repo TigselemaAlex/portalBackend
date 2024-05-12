@@ -9,6 +9,7 @@ import com.example.portalbackend.domain.entity.User;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.domain.repository.UserRepository;
 import com.example.portalbackend.domain.repository.UserRoleRepository;
+import com.example.portalbackend.service.spec.IPushNotificationService;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.user.UserUtil;
 import jakarta.persistence.EntityNotFoundException;

@@ -15,5 +15,5 @@ public class ParticipantVote extends AbstractEntity {
     @ManyToOne
     private AssemblyQuestion assemblyQuestion;
     @ManyToOne
-    private User participant;
+    private User voteBy;
 }

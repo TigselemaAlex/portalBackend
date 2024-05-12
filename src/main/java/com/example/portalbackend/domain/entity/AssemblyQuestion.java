@@ -1,8 +1,6 @@
 package com.example.portalbackend.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -15,6 +13,7 @@ import java.util.List;
 @Builder
 public class AssemblyQuestion extends AbstractEntity{
 
+    @Column(columnDefinition = "TEXT")
     private String question;
     private Integer totalVotes;
     private Integer upVotes;
@@ -24,6 +23,6 @@ public class AssemblyQuestion extends AbstractEntity{
     private User createdBy;
     @ManyToOne
     private Convocation convocation;
-    @OneToMany(mappedBy = "assemblyQuestion")
+    @OneToMany(mappedBy = "assemblyQuestion", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ParticipantVote> votes;
 }

@@ -10,6 +10,7 @@ import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.User;
 import com.example.portalbackend.service.spec.IMailService;
+import com.example.portalbackend.service.spec.IPushNotificationService;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.user.UserUtil;
 import org.springframework.data.domain.Page;
@@ -27,10 +28,12 @@ public class UserUseCase extends AbstractUseCase{
     private final IUserService userService;
 
     private final IMailService mailService;
-    protected UserUseCase(CustomResponseBuilder customResponseBuilder, IUserService userService, IMailService mailService) {
+    private final IPushNotificationService pushNotificationService;
+    protected UserUseCase(CustomResponseBuilder customResponseBuilder, IUserService userService, IMailService mailService, IPushNotificationService pushNotificationService) {
         super(customResponseBuilder);
         this.userService = userService;
         this.mailService = mailService;
+        this.pushNotificationService = pushNotificationService;
     }
 
     public ResponseEntity<CustomResponse<?>> findAll(final String search, final Pageable pageable){
@@ -57,6 +60,7 @@ public class UserUseCase extends AbstractUseCase{
 
     public ResponseEntity<CustomResponse<?>> delete(final Long id){
         userService.delete(id);
+        pushNotificationService.deleteDeviceToken(id);
         return customResponseBuilder.build(HttpStatus.OK, "Usuario eliminado exitosamente");
     }
 
@@ -78,7 +82,6 @@ public class UserUseCase extends AbstractUseCase{
     }
 
     public ResponseEntity<CustomResponse<?>> updatePassword(final Long id, final UserUpdatePasswordData data){
-        // TODO: Implement this method
         User userFromDb = userService.updatePassword(id, data);
         UserResponse response = new UserResponse(userFromDb);
         return customResponseBuilder.build(HttpStatus.OK, "Contraseña actualizada exitosamente", response);
@@ -88,4 +91,7 @@ public class UserUseCase extends AbstractUseCase{
         UserResponse response = new UserResponse(userService.findPresident());
         return customResponseBuilder.build(HttpStatus.OK, "Presidente obtenido exitosamente", response);
     }
+
+
+
 }

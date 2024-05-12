@@ -33,6 +33,8 @@ public interface IConvocationService {
 
     ConvocationParticipant findParticipantById(Long id);
 
+    ConvocationParticipant findByConvocationIdAndResidenceUserId(Long id, Long userId);
+
     List<ConvocationParticipant> findAllParticipants(Long id);
 
     Convocation findFirstByDateBetweenAndFinalizedIsFalse();

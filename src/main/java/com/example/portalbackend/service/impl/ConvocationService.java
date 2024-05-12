@@ -104,6 +104,9 @@ public class ConvocationService implements IConvocationService {
     public void finalizeConvocation(Long id) {
         Convocation convocation = findById(id);
         convocation.setFinalized(true);
+        convocation.getAssemblyQuestions().forEach(assemblyQuestion -> {
+            assemblyQuestion.setEnabled(false);
+        });
         convocationRepository.save(convocation);
     }
 
@@ -192,6 +195,13 @@ public class ConvocationService implements IConvocationService {
     public ConvocationParticipant findParticipantById(Long id) {
         return convocationParticipantRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
+
+    @Override
+    public ConvocationParticipant findByConvocationIdAndResidenceUserId(Long id, Long userId) {
+        return convocationParticipantRepository.findFirstByConvocationIdAndResidenceUserId(id, userId).orElse(null);
+    }
+
+
 
     @Override
     public List<ConvocationParticipant> findAllParticipants(Long id) {

@@ -2,6 +2,7 @@ package com.example.portalbackend.api.controller;
 
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdateData;
+import com.example.portalbackend.api.dto.request.user.UserUpdatePasswordData;
 import com.example.portalbackend.api.usecase.UserUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import jakarta.validation.Valid;
@@ -49,6 +50,11 @@ public class UserController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<CustomResponse<?>> update(@Valid @RequestBody UserUpdateData user, @PathVariable Long id) {
         return userUseCase.update(user, id);
+    }
+
+    @PutMapping(value = "/{id}/update-password")
+    public ResponseEntity<CustomResponse<?>> updatePassword(@Valid @RequestBody UserUpdatePasswordData user, @PathVariable Long id) {
+        return userUseCase.updatePassword(id, user);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
