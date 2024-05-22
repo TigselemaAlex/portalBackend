@@ -12,8 +12,13 @@ import lombok.*;
 @Builder
 public class ParticipantVote extends AbstractEntity {
     private Boolean vote;
+
+    private String deviceId;
+
     @ManyToOne
     private AssemblyQuestion assemblyQuestion;
     @ManyToOne
     private User voteBy;
+
+
 }

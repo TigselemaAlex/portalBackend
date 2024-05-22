@@ -7,6 +7,7 @@ import com.example.portalbackend.api.dto.request.convocation.ConvocationUpdateDa
 import com.example.portalbackend.api.usecase.ConvocationUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.util.enumerate.ConvocationType;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ public class ConvocationController {
     private final ConvocationUseCase convocationUseCase;
 
     @PostMapping
-    public ResponseEntity<CustomResponse<?>> createConvocation(@Valid @RequestBody ConvocationCreateData data) {
+    public ResponseEntity<CustomResponse<?>> createConvocation(@Valid @RequestBody ConvocationCreateData data) throws FirebaseMessagingException {
         return convocationUseCase.createConvocation(data);
     }
 

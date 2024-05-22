@@ -17,7 +17,7 @@ public record ParkingTypeResponse(
                 parkingType.getId(),
                 parkingType.getType(),
                 parkingType.getDescription(),
-                parkingType.getPrice(),
+                new BigDecimal(0),
                 parkingType.getSeverity()
         );
     }

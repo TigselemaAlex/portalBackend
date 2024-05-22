@@ -26,7 +26,6 @@ public class ParkingTypeService implements IParkingTypeService {
                 .type(data.type())
                 .description(data.description())
                 .severity(data.severity())
-                .price(data.price())
                 .build();
         return parkingTypeRepository.save(parkingType);
     }
@@ -35,7 +34,6 @@ public class ParkingTypeService implements IParkingTypeService {
     public ParkingType update(ParkingTypeUpdateData data, Long id) {
         ParkingType parkingType = findById(id);
         parkingType.setDescription(data.description());
-        parkingType.setPrice(data.price());
         return parkingTypeRepository.save(parkingType);
     }
 

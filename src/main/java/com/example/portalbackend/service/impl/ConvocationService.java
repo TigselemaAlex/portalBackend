@@ -51,7 +51,7 @@ public class ConvocationService implements IConvocationService {
                 .updatedBy(userService.findById(data.createdBy()))
                 .finalized(false)
                 .build();
-        if (data.type().equals(ConvocationType.ASSEMBLY)){
+        if (data.type().equals(ConvocationType.ASSEMBLY_EXTRAORDINARY) || data.type().equals(ConvocationType.ASSEMBLY_ORDINARY)){
             convocation.setParticipants(
                     residenceRepository.findAll().stream()
                             .map(residence -> {
@@ -62,6 +62,8 @@ public class ConvocationService implements IConvocationService {
                                         .build();
                             }).toList()
             );
+
+
         }
         return convocationRepository.save(convocation);
     }
@@ -118,11 +120,11 @@ public class ConvocationService implements IConvocationService {
     @Override
     public ConvocationParticipant updateAttendance(Long id, ConvocationAttendanceData data) {
         ConvocationParticipant participant = findParticipantById(id);
-        if(participant.getConvocation().getFinalized()){
-            return null;
-        }
+
         Residence residence = residenceService.findById(data.residence());
         User user = residence.getUser();
+
+
         if (data.attendance()){
             if(Objects.nonNull(user)){
                 participant.setAttendance(true);
@@ -145,6 +147,7 @@ public class ConvocationService implements IConvocationService {
             participant.setAttendance(false);
             participant.setAttendanceDate(null);
             participant.setParticipant(null);
+            participant.setDeviceId(null);
         }
 
         return convocationParticipantRepository.save(participant);
@@ -156,6 +159,15 @@ public class ConvocationService implements IConvocationService {
         if(participant.getConvocation().getFinalized()){
             return null;
         }
+        if(Objects.nonNull(data.deviceId())){
+            ConvocationParticipant participantByDeviceId = convocationParticipantRepository.findFirstByConvocationIdAndDeviceId(participant.getConvocation().getId(), data.deviceId()).orElse(null);
+            if(Objects.nonNull(participantByDeviceId)){
+                if (!Objects.equals(participantByDeviceId.getResidence().getUser().getId(), participant.getResidence().getUser().getId())){
+                    return null;
+                }
+            }
+        }
+
         Calendar now = Calendar.getInstance();
         if (now.before(participant.getConvocation().getAttendanceDeadline()) && now.after(participant.getConvocation().getDate())){
             Residence residence = residenceService.findById(data.residence());
@@ -163,6 +175,7 @@ public class ConvocationService implements IConvocationService {
             if (data.attendance()){
                 if(Objects.nonNull(user)){
                     participant.setAttendance(true);
+                    participant.setDeviceId(data.deviceId());
                     participant.setAttendanceDate(Calendar.getInstance());
                     if(Objects.nonNull(data.participant())){
                         participant.setParticipant(data.participant());
@@ -171,6 +184,7 @@ public class ConvocationService implements IConvocationService {
                     }
                 }else {
                     if (Objects.nonNull(data.participant())) {
+                        participant.setDeviceId(data.deviceId());
                         participant.setAttendance(true);
                         participant.setAttendanceDate(Calendar.getInstance());
                         participant.setParticipant(data.participant());
@@ -182,6 +196,7 @@ public class ConvocationService implements IConvocationService {
                 participant.setAttendance(false);
                 participant.setAttendanceDate(null);
                 participant.setParticipant(null);
+                participant.setDeviceId(null);
             }
 
             return convocationParticipantRepository.save(participant);
@@ -219,7 +234,7 @@ public class ConvocationService implements IConvocationService {
         end.set(Calendar.HOUR_OF_DAY, 23);
         end.set(Calendar.MINUTE, 59);
         end.set(Calendar.SECOND, 59);
-        return convocationRepository.findFirstByDateBetweenAndFinalizedIsFalseAndType(start, end, ConvocationType.ASSEMBLY);
+        return convocationRepository.findFirstByDateBetweenAndFinalizedIsFalseAndTypeOrType(start, end, ConvocationType.ASSEMBLY_EXTRAORDINARY, ConvocationType.ASSEMBLY_ORDINARY);
     }
 
     @Override

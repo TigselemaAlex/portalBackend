@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ParticipantVoteRepository extends JpaRepository<ParticipantVote, Long>{
 
     Optional<ParticipantVote> findByVoteByAndAssemblyQuestion(User voteBy, AssemblyQuestion assemblyQuestion);
+    Optional<ParticipantVote> findFirstByDeviceIdAndAssemblyQuestion(String deviceId, AssemblyQuestion assemblyQuestion);
 }

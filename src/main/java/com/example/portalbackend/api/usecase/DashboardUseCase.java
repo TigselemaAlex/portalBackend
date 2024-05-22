@@ -19,4 +19,8 @@ public class DashboardUseCase extends AbstractUseCase{
     public ResponseEntity<CustomResponse<?>> adminDashboard() {
         return customResponseBuilder.build(HttpStatus.OK,"Dashboard del Administrador" ,dashboardService.getAdminDashboard());
     }
+
+    public ResponseEntity<CustomResponse<?>> presidentDashboard() {
+        return customResponseBuilder.build(HttpStatus.OK,"Dashboard del Presidente" ,dashboardService.getPresidentDashboard());
+    }
 }

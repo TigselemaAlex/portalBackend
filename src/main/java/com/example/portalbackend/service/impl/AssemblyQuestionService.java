@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -32,7 +34,9 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
     public AssemblyQuestion createAssemblyQuestion(AssemblyQuestionData data) {
         User user = userService.findById(data.createdBy());
         Convocation convocation = convocationService.findById(data.convocation());
-
+        if (convocation.getFinalized()){
+            return null;
+        }
         return assemblyQuestionRepository.save(AssemblyQuestion.builder()
                         .createdBy(user)
                         .enabled(false)
@@ -67,6 +71,9 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
     @Override
     public AssemblyQuestion updateAssemblyQuestion(Long id, AssemblyQuestionData data) {
         AssemblyQuestion assemblyQuestion = findAssemblyQuestionById(id);
+        if (assemblyQuestion.getConvocation().getFinalized()){
+            return null;
+        }
         assemblyQuestion.setQuestion(data.question());
         return assemblyQuestionRepository.save(assemblyQuestion);
     }
@@ -85,6 +92,9 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
     @Override
     public AssemblyQuestion toggleEnabledVote(Long id) {
         AssemblyQuestion assemblyQuestion = findAssemblyQuestionById(id);
+        if (assemblyQuestion.getConvocation().getFinalized()){
+            return null;
+        }
         assemblyQuestion.setEnabled(!assemblyQuestion.getEnabled());
         return assemblyQuestionRepository.save(assemblyQuestion);
 
@@ -105,12 +115,20 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
             if (!convocationParticipant.getAttendance()) {
                 return null;
             }
+            ParticipantVote participantByDevice = participantVoteRepository.findFirstByDeviceIdAndAssemblyQuestion(vote.deviceId(), assemblyQuestion).orElse(null);
+
+            if (participantByDevice != null) {
+                if (!Objects.equals(participantByDevice.getVoteBy().getId(), user.getId())) {
+                    return null;
+                }
+            }
             ParticipantVote participant = participantVoteRepository.findByVoteByAndAssemblyQuestion(user, assemblyQuestion).orElse(null);
             if(participant == null){
                 participant = ParticipantVote.builder()
                         .voteBy(user)
                         .assemblyQuestion(assemblyQuestion)
                         .vote(vote.vote())
+                        .deviceId(vote.deviceId())
                         .build();
                 assemblyQuestion.getVotes().add(participant);
                 assemblyQuestion.setTotalVotes(assemblyQuestion.getTotalVotes() + 1);
@@ -129,6 +147,7 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
                         assemblyQuestion.setDownVotes(assemblyQuestion.getDownVotes() + 1);
                     }
                     participant.setVote(vote.vote());
+                    participant.setDeviceId(vote.deviceId());
                 }
             }
         }else{

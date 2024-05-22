@@ -1,6 +1,5 @@
 package com.example.portalbackend.api.usecase;
 
-import com.example.portalbackend.api.dto.request.convocation.ConvocationAttendanceData;
 import com.example.portalbackend.api.dto.request.geolocation.GeolocationData;
 import com.example.portalbackend.api.dto.request.vote.AssemblyQuestionData;
 import com.example.portalbackend.api.dto.request.vote.ParticipantVoteData;
@@ -9,7 +8,6 @@ import com.example.portalbackend.api.dto.response.vote.ParticipantVoteResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.AssemblyQuestion;
-import com.example.portalbackend.domain.entity.ConvocationParticipant;
 import com.example.portalbackend.domain.entity.ParticipantVote;
 import com.example.portalbackend.service.spec.IAssemblyQuestionService;
 import com.example.portalbackend.service.spec.IPushNotificationService;
@@ -48,7 +46,10 @@ public class AssemblyQuestionUseCase extends AbstractUseCase{
     }
 
     public ResponseEntity<CustomResponse<?>> createAssemblyQuestion(AssemblyQuestionData data) {
-        assemblyQuestionService.createAssemblyQuestion(data);
+        AssemblyQuestion assemblyQuestion = assemblyQuestionService.createAssemblyQuestion(data);
+        if (assemblyQuestion == null) {
+            return customResponseBuilder.build(HttpStatus.BAD_REQUEST, "No se pudo crear la pregunta de la asamblea, verifique si la asamblea no ha finalizado");
+        }
         return customResponseBuilder.build(HttpStatus.CREATED, "Pregunta de asamblea creada con éxito");
     }
 
@@ -67,7 +68,10 @@ public class AssemblyQuestionUseCase extends AbstractUseCase{
     }
 
     public ResponseEntity<CustomResponse<?>> updateAssemblyQuestion(Long id, AssemblyQuestionData data) {
-        assemblyQuestionService.updateAssemblyQuestion(id, data);
+        AssemblyQuestion assemblyQuestion = assemblyQuestionService.updateAssemblyQuestion(id, data);
+        if (assemblyQuestion == null) {
+            return customResponseBuilder.build(HttpStatus.BAD_REQUEST, "No se pudo actualizar la pregunta de la asamblea, verifique si la asamblea no ha finalizado");
+        }
         return customResponseBuilder.build(HttpStatus.OK, "Pregunta de asamblea actualizada con éxito");
     }
 
@@ -78,6 +82,9 @@ public class AssemblyQuestionUseCase extends AbstractUseCase{
 
     public  ResponseEntity<CustomResponse<?>> toggleEnabledVote(Long id) throws FirebaseMessagingException {
         AssemblyQuestion assemblyQuestion = assemblyQuestionService.toggleEnabledVote(id);
+        if (assemblyQuestion == null) {
+            return customResponseBuilder.build(HttpStatus.BAD_REQUEST, "No se pudo habilitar/deshabilitar el voto en la pregunta de la asamblea, verifique el si no ha finalizado la asamblea");
+        }
         String title = assemblyQuestion.getEnabled() ? "Voto habilitado" : "Voto deshabilitado";
         String message = "Pregunta: " + assemblyQuestion.getQuestion();
         HashMap<String, String> data = new HashMap<>();

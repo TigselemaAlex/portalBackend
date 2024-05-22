@@ -95,7 +95,6 @@ public class SecurityAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         return request -> {
             var cors = new CorsConfiguration();
-
             cors.setAllowedOriginPatterns(List.of("*"));
             cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH" ,"OPTIONS"));
             cors.setAllowedHeaders(List.of("*"));

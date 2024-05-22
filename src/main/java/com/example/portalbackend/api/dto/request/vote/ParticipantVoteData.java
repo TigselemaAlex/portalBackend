@@ -10,7 +10,9 @@ public record ParticipantVoteData(
         @NotNull(message = "El participante no puede ser nulo")
         Long voteBy,
         @NotNull(message = "La geolocalización no puede ser nula")
-        GeolocationDataP geolocation
+        GeolocationDataP geolocation,
+        @NotNull (message = "El dispositivo no puede ser nulo")
+        String deviceId
 ) {
 
         public record GeolocationDataP(

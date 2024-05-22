@@ -15,4 +15,6 @@ public interface ConvocationParticipantRepository extends JpaRepository<Convocat
     List<ConvocationParticipant> findAllByConvocationIdAndResidenceUserId(Long id, Long userId);
 
     Optional<ConvocationParticipant> findFirstByConvocationIdAndResidenceUserId(Long id, Long userId);
+
+    Optional<ConvocationParticipant> findFirstByConvocationIdAndDeviceId(Long id, String deviceId);
 }

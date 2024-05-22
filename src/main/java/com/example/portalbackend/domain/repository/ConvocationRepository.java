@@ -8,5 +8,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.Calendar;
 
 public interface ConvocationRepository extends JpaRepository<Convocation, Long>, JpaSpecificationExecutor<Convocation> {
-    Convocation findFirstByDateBetweenAndFinalizedIsFalseAndType(Calendar start, Calendar end, ConvocationType type);
+    Convocation findFirstByDateBetweenAndFinalizedIsFalseAndTypeOrType(Calendar start, Calendar end, ConvocationType type, ConvocationType type2);
+
+    Long countByDateBetweenAndFinalizedIsTrueAndType(Calendar start, Calendar end, ConvocationType type);
+
+
 }

@@ -7,6 +7,7 @@ public record ConvocationAttendanceData(
         Long residence,
         @NotNull(message = "La asistencia es requerida")
         Boolean attendance,
-        String participant
+        String participant,
+        String deviceId
 ) {
 }

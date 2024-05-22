@@ -17,4 +17,6 @@ public interface ISocialEventService {
     SocialEvent create(SocialEventCreateData socialEvent) throws IOException, FileUploadException;
     SocialEvent update(Long id, SocialEventUpdateData socialEvent) throws IOException, FileUploadException;
     void delete(Long id);
+
+
 }

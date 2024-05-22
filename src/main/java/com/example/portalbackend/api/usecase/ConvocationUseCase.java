@@ -1,6 +1,5 @@
 package com.example.portalbackend.api.usecase;
 
-import com.amazonaws.Response;
 import com.example.portalbackend.api.dto.request.convocation.ConvocationAttendanceData;
 import com.example.portalbackend.api.dto.request.convocation.ConvocationCreateData;
 import com.example.portalbackend.api.dto.request.convocation.ConvocationParticipantAttendanceData;
@@ -14,11 +13,13 @@ import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.Convocation;
 import com.example.portalbackend.domain.entity.ConvocationParticipant;
-import com.example.portalbackend.domain.entity.User;
 import com.example.portalbackend.service.spec.IConvocationService;
+import com.example.portalbackend.service.spec.IPushNotificationService;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.enumerate.ConvocationType;
+import com.example.portalbackend.util.enumerate.PushNotificationAction;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
-import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,19 +48,26 @@ public class ConvocationUseCase extends AbstractUseCase {
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
     private final IUserService userService;
+    private final IPushNotificationService pushNotificationService;
 
-    protected ConvocationUseCase(CustomResponseBuilder customResponseBuilder, SimpMessagingTemplate simpMessagingTemplate, IConvocationService convocationService, ResourceLoader resourceLoader, ObjectMapper objectMapper, IUserService userService) {
+    protected ConvocationUseCase(CustomResponseBuilder customResponseBuilder, SimpMessagingTemplate simpMessagingTemplate, IConvocationService convocationService, ResourceLoader resourceLoader, ObjectMapper objectMapper, IUserService userService, IPushNotificationService pushNotificationService) {
         super(customResponseBuilder);
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.convocationService = convocationService;
         this.resourceLoader = resourceLoader;
         this.objectMapper = objectMapper;
         this.userService = userService;
+        this.pushNotificationService = pushNotificationService;
     }
 
-    public ResponseEntity<CustomResponse<?>> createConvocation(ConvocationCreateData data) {
+    public ResponseEntity<CustomResponse<?>> createConvocation(ConvocationCreateData data) throws FirebaseMessagingException {
         Convocation convocation = convocationService.createConvocation(data);
         simpMessagingTemplate.convertAndSend("/topic/notification", new NotificationResponse("Convocatoria", "Se ha creado una nueva convocatoria", convocation.getCreatedBy().getNames()+ " " + convocation.getCreatedBy().getSurnames()));
+        if(convocation.getType().equals(ConvocationType.ASSEMBLY_ORDINARY) || convocation.getType().equals(ConvocationType.ASSEMBLY_EXTRAORDINARY)){
+            HashMap<String, String> pushData = new HashMap<>();
+            pushData.put("action", PushNotificationAction.ASSEMBLY_CREATED.name());
+            pushNotificationService.sendPushNotificationAllClients(convocation.getSubject(), "Se ha añadido una nueva Asamblea, revise el calendario para mas información", pushData);
+        }
         return customResponseBuilder.build(HttpStatus.CREATED, "Convocatoria creada exitosamente");
     }
 
@@ -134,7 +142,7 @@ public class ConvocationUseCase extends AbstractUseCase {
             double distance = calculateHaversineDistance(pointLatitud.doubleValue(), pointLongitud.doubleValue(), attendanceData.latitude().doubleValue(), attendanceData.longitude().doubleValue());
             boolean isInside = distance <= radius;
             if(isInside) {
-                ConvocationAttendanceData convocationAttendanceData = new ConvocationAttendanceData(attendanceData.residence(), true, null);
+                ConvocationAttendanceData convocationAttendanceData = new ConvocationAttendanceData(attendanceData.residence(), true, null, attendanceData.deviceId());
                 ConvocationParticipant participant = convocationService.updateAttendanceParticipant(id, convocationAttendanceData);
                 if (participant == null) {
                     return customResponseBuilder.build(HttpStatus.BAD_REQUEST, "Error al actualizar la asistencia, verifique que la asamblea aun no haya finalizado o que este en el tiempo límite para actualizar la asistencia");

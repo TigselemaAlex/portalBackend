@@ -15,7 +15,12 @@ public interface ConvocationSpecifications {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (subject != null) {
-                predicates.add(criteriaBuilder.like(root.get("subject"), "%" + subject + "%"));
+                predicates.add(criteriaBuilder.or(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("subject")), "%" + subject.toLowerCase() + "%"),
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("code")), "%" + subject.toLowerCase() + "%")
+                ));
             }
             if (start != null && end == null) {
                 Calendar startClone = (Calendar) start.clone();

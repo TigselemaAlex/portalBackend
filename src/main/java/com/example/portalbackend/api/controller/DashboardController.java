@@ -21,4 +21,10 @@ public class DashboardController {
     public ResponseEntity<CustomResponse<?>> getAdminDashboard() {
         return dashboardUseCase.adminDashboard();
     }
+
+    @PreAuthorize("hasRole('ROLE_PRESIDENT')")
+    @GetMapping("/president")
+    public ResponseEntity<CustomResponse<?>> getPresidentDashboard() {
+        return dashboardUseCase.presidentDashboard();
+    }
 }

@@ -11,8 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class IncidentEvidence extends AbstractEntity{
-    String fileName;
-    String fileUrl;
-    @ManyToOne
+    private String fileName;
+    private String fileUrl;
+    private @ManyToOne
     GuardIncident incident;
 }

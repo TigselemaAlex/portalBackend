@@ -3,6 +3,7 @@ package com.example.portalbackend.service.generator;
 import com.example.portalbackend.api.dto.request.guard.GuardCreateData;
 import com.example.portalbackend.api.dto.request.guard_activity.GuardActivityCreateData;
 import com.example.portalbackend.api.dto.request.incident_type.IncidentTypeCreateData;
+import com.example.portalbackend.api.dto.request.income_type.IncomeTypeCreateData;
 import com.example.portalbackend.api.dto.request.parking.ParkingCreateData;
 import com.example.portalbackend.api.dto.request.parking_group.ParkingGroupCreateData;
 import com.example.portalbackend.api.dto.request.parking_type.ParkingTypeCreateData;
@@ -14,12 +15,14 @@ import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.domain.repository.GuardRepository;
+import com.example.portalbackend.domain.repository.IncomeTypeRepository;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.domain.repository.SocialEventRepository;
 import com.example.portalbackend.service.impl.PassageService;
 import com.example.portalbackend.service.impl.ResidenceService;
 import com.example.portalbackend.service.impl.UserService;
 import com.example.portalbackend.service.spec.*;
+import com.example.portalbackend.util.enumerate.IncomeTypePeriod;
 import com.example.portalbackend.util.enumerate.ParkingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +50,7 @@ public class DataGeneratorService {
     private final GuardRepository guardRepository;
     private final IGuardActivityService guardActivityService;
     private final IIncidentTypeService incidentTypeService;
+    private final IncomeTypeRepository incomeTypeRepository;
 
     public void generateRoles() {
         System.out.println("Generating roles");
@@ -1900,6 +1904,29 @@ public class DataGeneratorService {
                 new IncidentTypeCreateData("Otro", "Otro tipo de incidente en el condominio", "#A9A9A9")
         );
         createData.forEach(incidentTypeService::addIncidentType);
+    }
+
+    public void generateIncomeTypes(){
+        System.out.println("Generating income types");
+        List<IncomeType> createData = List.of(
+                IncomeType.builder()
+                        .name("Alícuota")
+                        .description("Pago de alícuota mensual")
+                        .canBeDeleted(false)
+                        .period(IncomeTypePeriod.MONTHLY)
+                        .price(new BigDecimal(10))
+                        .build(),
+                IncomeType.builder()
+                        .name("Parqueadero Zona Azul")
+                        .description("Pago de parqueadero mensual")
+                        .canBeDeleted(false)
+                        .period(IncomeTypePeriod.MONTHLY)
+                        .price(new BigDecimal(10))
+                        .build()
+
+        );
+        incomeTypeRepository.saveAll(createData);
+
     }
 
 }

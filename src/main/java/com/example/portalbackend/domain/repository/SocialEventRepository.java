@@ -19,4 +19,6 @@ public interface SocialEventRepository extends JpaRepository<SocialEvent, Long> 
     @Query("SELECT s FROM SocialEvent s WHERE s.date <= :to AND lower(s.title) LIKE lower(concat('%',:title,'%'))")
     Page<SocialEvent> findAllByTitleAndDateBefore(String title, Calendar to, Pageable pageable);
 
+    Long countByDateBetween(Calendar from, Calendar to);
+
 }

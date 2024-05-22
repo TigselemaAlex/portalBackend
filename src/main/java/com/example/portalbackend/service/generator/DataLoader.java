@@ -28,6 +28,8 @@ public class DataLoader implements ApplicationListener<ApplicationReadyEvent> {
         dataGeneratorService.generateGuards();
         dataGeneratorService.generateGuardActivities();
         dataGeneratorService.generateIncidentTypes();*/
+        //dataGeneratorService.generateIncomeTypes();
+
         System.out.println("Data loaded");
     }
 }
