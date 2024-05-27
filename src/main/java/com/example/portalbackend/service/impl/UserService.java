@@ -2,41 +2,48 @@ package com.example.portalbackend.service.impl;
 
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.api.dto.request.user.UserUpdateData;
+import com.example.portalbackend.api.dto.request.user.UserUpdatePasswordData;
 import com.example.portalbackend.domain.entity.AuthRole;
 import com.example.portalbackend.domain.entity.Role;
 import com.example.portalbackend.domain.entity.User;
 import com.example.portalbackend.domain.repository.RoleRepository;
 import com.example.portalbackend.domain.repository.UserRepository;
 import com.example.portalbackend.domain.repository.UserRoleRepository;
+import com.example.portalbackend.service.spec.IPushNotificationService;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.user.UserUtil;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.List;
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
     private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-
-        this.userRoleRepository = userRoleRepository;
-    }
 
     @Override
     @Transactional(readOnly = true)
     public Page<User> findAll(String names, String surnames, String dni, Pageable pageable) {
         return userRepository.findAllByNamesContainingIgnoreCaseOrSurnamesContainingIgnoreCaseOrDniContainingIgnoreCase(names, surnames, dni, pageable);
+    }
+
+    @Override
+    public List<User> findAllActive(String names, String surnames, String dni) {
+        return userRepository.findAllActive(names, surnames, dni);
     }
 
     @Override
@@ -70,7 +77,7 @@ public class UserService implements IUserService {
                 .dni(user.dni())
                 .phone(user.phone())
                 .email(user.email())
-                .password(UserUtil.generatePassword())
+                .password(passwordEncoder.encode(UserUtil.generatePassword()))
                 .build();
         userToCreate = userRepository.save(userToCreate);
         User finalUserToCreate = userToCreate;
@@ -91,5 +98,24 @@ public class UserService implements IUserService {
         User userToReactivate = findById(id);
         userToReactivate.setActive(true);
         userRepository.save(userToReactivate);
+    }
+
+    @Override
+    public User recoverPassword(String dni, String password) {
+        User userToRecover = userRepository.findByDni(dni).orElseThrow(EntityNotFoundException::new);
+        userToRecover.setPassword(passwordEncoder.encode(password));
+        return userRepository.save(userToRecover);
+    }
+
+    @Override
+    public User updatePassword(Long id, UserUpdatePasswordData data) {
+        User userToUpdate = findById(id);
+        userToUpdate.setPassword(passwordEncoder.encode(data.password()));
+        return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User findPresident() {
+        return userRepository.findFirstByAuthRolesRoleNameOrderByUpdatedAtDesc("PRESIDENT").orElseThrow(EntityNotFoundException::new);
     }
 }

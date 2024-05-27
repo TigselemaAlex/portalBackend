@@ -1,10 +1,13 @@
 package com.example.portalbackend.domain.exception;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.example.portalbackend.util.error.ErrorHandleMessage;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,7 +16,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartException;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -104,17 +111,43 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: No se pudo realizar la operación");
     }
 
-    /*@ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleError500(Exception ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
-    }*/
-
 
     private record ValidationErrorData(String field, List<String> messages, LocalDate timestamp){
         public ValidationErrorData(FieldError error){
             this(error.getField(), new ArrayList<>(Collections.singletonList(error.getDefaultMessage())), LocalDate.now());
         }
     }
+
+    @ExceptionHandler(FileEmptyException.class)
+    public ResponseEntity<?> handleFileEmptyException(FileEmptyException ex){
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<?> handleFileUploadException(FileUploadException ex){
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(SpringBootFileUploadException.class)
+    public ResponseEntity<?> handleSpringBootFileUploadException(SpringBootFileUploadException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AmazonServiceException.class)
+    public ResponseEntity<?> handleAmazonServiceException(AmazonServiceException ex){
+        return ResponseEntity.internalServerError().body(ex.getErrorMessage());
+    }
+
+    @ExceptionHandler(SdkClientException.class)
+    public ResponseEntity<?> handleSdkClientException(SdkClientException ex){
+        return ResponseEntity.internalServerError().body(ex.getMessage());
+    }
+
+    @ExceptionHandler({IOException.class, FileNotFoundException.class, MultipartException.class})
+    public ResponseEntity<?> handleIOException(Exception ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 
 
 }

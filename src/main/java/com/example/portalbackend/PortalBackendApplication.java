@@ -15,16 +15,5 @@ public class PortalBackendApplication {
     }
 
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("*")
-                        .allowedOrigins("http://localhost:4200");
-            }
-        };
-    }
 
 }

@@ -5,6 +5,7 @@ import com.example.portalbackend.api.dto.request.passage.PassageUpdateData;
 import com.example.portalbackend.api.usecase.PassageUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -13,13 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/protected/passages")
+@RequiredArgsConstructor
 public class PassageController {
 
     private final PassageUseCase passageUseCase;
-
-    public PassageController(PassageUseCase passageUseCase) {
-        this.passageUseCase = passageUseCase;
-    }
 
     @GetMapping
     public ResponseEntity<CustomResponse<?>> findAll(
@@ -43,7 +41,7 @@ public class PassageController {
         return passageUseCase.deletePassage(id);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> update(@Valid @RequestBody PassageUpdateData passageUpdateData, @PathVariable Long id) {
         return passageUseCase.updatePassage(id, passageUpdateData);
     }

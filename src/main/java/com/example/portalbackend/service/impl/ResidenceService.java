@@ -11,6 +11,7 @@ import com.example.portalbackend.service.spec.IResidenceService;
 import com.example.portalbackend.service.spec.IUserService;
 import com.example.portalbackend.util.number.NumberUtils;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,26 +21,21 @@ import java.util.Objects;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ResidenceService implements IResidenceService{
 
     private final ResidenceRepository residenceRepository;
     private final IUserService userService;
     private final IPassageService passageService;
 
-    public ResidenceService(ResidenceRepository residenceRepository, IUserService userService, IPassageService passageService) {
-        this.residenceRepository = residenceRepository;
-        this.userService = userService;
-        this.passageService = passageService;
-    }
-
     @Override
     public Residence update(ResidenceUpdateData residence, Long id) {
         Residence residenceToUpdate = findById(id);
-        Passage passage = passageService.findById(residence.passage());
-        residenceToUpdate.setPassage(passage);
         if (Objects.nonNull(residence.user())) {
             User user = userService.findById(residence.user());
             residenceToUpdate.setUser(user);
+        }else{
+            residenceToUpdate.setUser(null);
         }
         return residenceRepository.save(residenceToUpdate);
     }
@@ -67,6 +63,6 @@ public class ResidenceService implements IResidenceService{
     @Override
     @Transactional(readOnly = true)
     public Page<Residence> findAll(String number, Pageable pageable) {
-        return residenceRepository.findAllByNumberContainingIgnoreCase(number, pageable);
+        return residenceRepository.findAllByNumberContainingIgnoreCaseOrUserNamesContainingIgnoreCaseOrUserSurnamesContainingIgnoreCase(number, number,number,pageable);
     }
 }

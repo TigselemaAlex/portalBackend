@@ -11,4 +11,6 @@ public interface PassageRepository extends JpaRepository<Passage, Long> {
     Page<Passage> findAllByNameContainingIgnoreCase(String name, Pageable pageable);
     List<Passage> findAllByActiveIsTrue();
     Passage findByName(String name);
+
 }
+

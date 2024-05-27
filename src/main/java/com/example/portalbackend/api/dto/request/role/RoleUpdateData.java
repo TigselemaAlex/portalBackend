@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record RoleUpdateData(
         @NotBlank (message = "La descripción no puede estar vacía")
-        String description,
-        @NotNull(message = "El estado no puede estar vacio")
-        Boolean active
+        String description
 ) {
 }

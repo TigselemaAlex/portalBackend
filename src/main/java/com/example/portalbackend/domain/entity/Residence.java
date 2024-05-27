@@ -1,10 +1,9 @@
 package com.example.portalbackend.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,12 +15,12 @@ public class Residence extends AbstractEntity{
 
     @Column(nullable = false, unique = true)
     private String number;
-
     @ManyToOne
     private User user;
-
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private Passage passage;
+
+    @OneToMany(mappedBy = "residence")
+    private List<Parking> parkings;
 }
