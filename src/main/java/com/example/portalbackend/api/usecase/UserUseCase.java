@@ -77,7 +77,7 @@ public class UserUseCase extends AbstractUseCase{
     public ResponseEntity<MailResponse> recoverPassword(final String dni){
         String newPassword = UserUtil.generateRecoveryPassword();
         User userFromDb = userService.recoverPassword(dni, newPassword);
-        MailResponse response = mailService.sendMail(userFromDb, newPassword);
+        MailResponse response = mailService.sendMailRecoveryPassword(userFromDb, newPassword);
         return ResponseEntity.ok(response);
     }
 

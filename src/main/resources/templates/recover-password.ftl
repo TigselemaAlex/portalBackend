@@ -10,6 +10,8 @@
         border-radius: 12px;
         padding: 16px;
         border: 1px solid #9ae0d9;">
+    <img src="https://portal-de-la-vina-bucket.s3.us-east-2.amazonaws.com/logo-removebg.png" alt="logo" width="240" style="display: block; margin: 0 auto; margin-bottom: 8px;
+    " />
     <h1 style="text-align: center;
         text-transform: uppercase;
         color: #084a42;

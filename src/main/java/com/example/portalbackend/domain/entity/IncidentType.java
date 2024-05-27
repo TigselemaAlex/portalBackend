@@ -17,5 +17,7 @@ public class IncidentType extends AbstractEntity{
     private String name;
     @Column(unique = true)
     private String severity;
+    @Column(columnDefinition = "TEXT")
     private String description;
+
 }

@@ -29,7 +29,7 @@ public class FileService implements IFileService {
     private final AmazonS3 amazonS3;
 
     @Override
-    public String uploadFile(MultipartFile multipartFile) throws FileUploadException, IOException {
+    public String uploadFile(MultipartFile multipartFile, String code) throws FileUploadException, IOException {
         //Convert MultipartFile to File
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         try(FileOutputStream fos = new FileOutputStream(file)){
@@ -37,6 +37,9 @@ public class FileService implements IFileService {
         }
         //Generate the file name
         String fileName = generateFileName(multipartFile);
+        if (code != null && !code.isEmpty()) {
+            fileName = code + "_" + fileName;
+        }
         //Upload the file to S3 bucket
         PutObjectRequest request = new PutObjectRequest(bucketName, fileName, file);
         ObjectMetadata metadata = new ObjectMetadata();

@@ -14,10 +14,7 @@ import com.example.portalbackend.api.dto.request.social_event.SocialEventCreateD
 import com.example.portalbackend.api.dto.request.user.UserCreateData;
 import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.exception.FileUploadException;
-import com.example.portalbackend.domain.repository.GuardRepository;
-import com.example.portalbackend.domain.repository.IncomeTypeRepository;
-import com.example.portalbackend.domain.repository.RoleRepository;
-import com.example.portalbackend.domain.repository.SocialEventRepository;
+import com.example.portalbackend.domain.repository.*;
 import com.example.portalbackend.service.impl.PassageService;
 import com.example.portalbackend.service.impl.ResidenceService;
 import com.example.portalbackend.service.impl.UserService;
@@ -51,6 +48,7 @@ public class DataGeneratorService {
     private final IGuardActivityService guardActivityService;
     private final IIncidentTypeService incidentTypeService;
     private final IncomeTypeRepository incomeTypeRepository;
+    private final PenaltyTypeRepository penaltyTypeRepository;
 
     public void generateRoles() {
         System.out.println("Generating roles");
@@ -1927,6 +1925,31 @@ public class DataGeneratorService {
         );
         incomeTypeRepository.saveAll(createData);
 
+    }
+
+    public void generatePenaltyTypes(){
+        System.out.println("Generating penalty types");
+        List<PenaltyType> createData = List.of(
+                PenaltyType.builder()
+                        .name("Inasistencia a la asamblea")
+                        .description("Penalización por la inasistencia injustificada a las asambleas del condominio")
+                        .canBeDeleted(false)
+                        .price(new BigDecimal(20))
+                        .build(),
+                PenaltyType.builder()
+                        .name("Uso indebido de los parqueaderos")
+                        .description("Penalización por el uso indebido deliberadamente de los parqueaderos")
+                        .canBeDeleted(false)
+                        .price(new BigDecimal(20))
+                        .build(),
+                PenaltyType.builder()
+                        .name("Incumplimiento de la normativas de mascotas")
+                        .description("Penalización por el incumplimiento de las normativa de mascotas en el condominio")
+                        .canBeDeleted(false)
+                        .price(new BigDecimal(20))
+                        .build()
+        );
+        penaltyTypeRepository.saveAll(createData);
     }
 
 }

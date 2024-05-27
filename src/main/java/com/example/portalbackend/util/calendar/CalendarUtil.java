@@ -24,7 +24,7 @@ public class CalendarUtil {
         int toYear = to.get(Calendar.YEAR);
         int fromMonth = from.get(Calendar.MONTH);
         int toMonth = to.get(Calendar.MONTH);
-        return (toYear - fromYear) * 12 + (toMonth - fromMonth);
+        return (toYear - fromYear) * 12 + (toMonth - fromMonth) + 1;
     }
     
     public static Calendar getCalendarWithoutDays(Long calendar){
@@ -36,5 +36,11 @@ public class CalendarUtil {
         newCalendar.set(Calendar.MINUTE, 0);
         newCalendar.set(Calendar.SECOND, 0);
         return newCalendar;
+    }
+
+    public static String getMonthAndYearSpanishTranslation(Calendar calendar){
+        if (calendar == null) return null;
+        String[] months = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+        return months[calendar.get(Calendar.MONTH)] + " del " + calendar.get(Calendar.YEAR);
     }
 }

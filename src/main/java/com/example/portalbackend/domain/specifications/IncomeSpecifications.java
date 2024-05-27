@@ -35,8 +35,9 @@ public interface IncomeSpecifications {
                 toDay.set(Calendar.HOUR_OF_DAY, 23);
                 toDay.set(Calendar.MINUTE, 59);
                 toDay.set(Calendar.SECOND, 59);
-                predicates.add(criteriaBuilder.between(root.get("paid_date"), fromClone, toDay));
-            } else if (from != null & to != null) {
+                predicates.add(criteriaBuilder.between(root.get("paidDate"), fromClone, toDay));
+            }
+            else if (from != null & to != null) {
 
                 Calendar fromClone = (Calendar) from.clone();
                 fromClone.set(Calendar.HOUR_OF_DAY, 0);
@@ -47,8 +48,8 @@ public interface IncomeSpecifications {
                 toClone.set(Calendar.HOUR_OF_DAY, 23);
                 toClone.set(Calendar.MINUTE, 59);
                 toClone.set(Calendar.SECOND, 59);
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("paid_date"), fromClone));
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("paid_date"), toClone));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("paidDate"), fromClone));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("paidDate"), toClone));
             }
 
             if (residence != null) {
@@ -58,6 +59,7 @@ public interface IncomeSpecifications {
 
 
             predicates.add(criteriaBuilder.isTrue(root.get("active")));
+            query.orderBy(criteriaBuilder.desc(root.get("paidDate")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
@@ -83,7 +85,7 @@ public interface IncomeSpecifications {
                 toDay.set(Calendar.HOUR_OF_DAY, 23);
                 toDay.set(Calendar.MINUTE, 59);
                 toDay.set(Calendar.SECOND, 59);
-                predicates.add(criteriaBuilder.between(root.get("paid_date"), fromClone, toDay));
+                predicates.add(criteriaBuilder.between(root.get("paidDate"), fromClone, toDay));
             } else if (from != null & to != null) {
 
                 Calendar fromClone = (Calendar) from.clone();
@@ -95,8 +97,8 @@ public interface IncomeSpecifications {
                 toClone.set(Calendar.HOUR_OF_DAY, 23);
                 toClone.set(Calendar.MINUTE, 59);
                 toClone.set(Calendar.SECOND, 59);
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("paid_date"), fromClone));
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("paid_date"), toClone));
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("paidDate"), fromClone));
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("paidDate"), toClone));
             }
 
             if (residence != null) {

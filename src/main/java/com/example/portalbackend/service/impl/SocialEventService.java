@@ -71,7 +71,7 @@ public class SocialEventService implements ISocialEventService {
 
     private void updateFile(SocialEvent newSocialEvent, String fileName, MultipartFile image) throws FileUploadException, IOException {
         if (image != null && image.getSize() > 0) {
-            fileName = fileService.uploadFile(image);
+            fileName = fileService.uploadFile(image, null);
             newSocialEvent.setImageUrl(BUCKET_URL + fileName);
             newSocialEvent.setFileName(fileName);
         }else{

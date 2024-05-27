@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface IFileService {
 
-    String uploadFile(MultipartFile multipartFile) throws FileUploadException, IOException;
+    String uploadFile(MultipartFile multipartFile, String code) throws FileUploadException, IOException;
 
     Object downloadFile(String fileName) throws FileDownloadException, IOException;
 

@@ -8,6 +8,7 @@ import com.example.portalbackend.service.spec.IIncomeTypeService;
 import com.example.portalbackend.util.enumerate.IncomeTypePeriod;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,13 @@ public class IncomeTypeService implements IIncomeTypeService {
     @Override
     @Transactional(readOnly = true)
     public List<IncomeType> findAll() {
-        return incomeTypeRepository.findAll();
+        return incomeTypeRepository.findAll(Sort.by(Sort.Order.asc("id")));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<IncomeType> findAllActive() {
-        return incomeTypeRepository.findAllByActiveIsTrue();
+        return incomeTypeRepository.findAllByActiveIsTrueOrderById();
     }
 
     @Override

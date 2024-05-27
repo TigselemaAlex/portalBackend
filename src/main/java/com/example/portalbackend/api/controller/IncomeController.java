@@ -1,11 +1,13 @@
 package com.example.portalbackend.api.controller;
 
+import com.example.portalbackend.api.dto.request.income.IncomeCasualCreateData;
+import com.example.portalbackend.api.dto.request.income.IncomeCasualUpdateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesCreateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesUpdateData;
 import com.example.portalbackend.api.usecase.IncomeUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.domain.exception.FileUploadException;
-import com.example.portalbackend.util.enumerate.PaidStatus;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,7 +34,7 @@ public class IncomeController {
             @RequestParam(required = false) Long residence,
             @PageableDefault(
                     size = 20,
-                    sort = "paidDate",
+                    sort = "createdAt",
                     direction = Sort.Direction.DESC)
             Pageable pageable) {
         return incomeUseCase.getIncomesByFiltersMonthly(type, from, to, residence, pageable);
@@ -46,7 +48,7 @@ public class IncomeController {
             @RequestParam(required = false) Long residence,
             @PageableDefault(
                     size = 20,
-                    sort = "paidDate",
+                    sort = "createdAt",
                     direction = Sort.Direction.DESC)
             Pageable pageable) {
         return incomeUseCase.getIncomesByFiltersCasual(type, from, to, residence, pageable);
@@ -62,7 +64,7 @@ public class IncomeController {
             @RequestParam Long residence,
             @RequestParam Long incomeType,
             @RequestParam MultipartFile paidEvidence
-                                                            ) throws IOException, FileUploadException {
+                                                            ) throws IOException, FileUploadException, FirebaseMessagingException {
         return incomeUseCase.saveIncomeFees(new IncomeFeesCreateData(description, amount, paidDate, paidSince, paidUntil, residence, incomeType, paidEvidence));
     }
 
@@ -76,8 +78,8 @@ public class IncomeController {
             @RequestParam Long paidUntil,
             @RequestParam Long residence,
             @RequestParam Long incomeType,
-            @RequestParam MultipartFile paidEvidence
-                                                              ) throws IOException, FileUploadException {
+            @RequestParam(required = false) MultipartFile paidEvidence
+                                                              ) throws IOException, FileUploadException, FirebaseMessagingException {
         return incomeUseCase.updateIncomeFees(id, new IncomeFeesUpdateData(description, amount, paidDate, paidSince, paidUntil, residence, incomeType, paidEvidence));
     }
 
@@ -85,6 +87,38 @@ public class IncomeController {
     public ResponseEntity<CustomResponse<?>> deleteIncome(@PathVariable Long id) {
         incomeUseCase.deleteIncome(id);
         return incomeUseCase.deleteIncome(id);
+    }
+
+    @GetMapping("/active/last")
+    public ResponseEntity<CustomResponse<?>> getLastByResidenceAndType(
+            @RequestParam Long residence,
+            @RequestParam Long type) {
+        return incomeUseCase.getLastByResidenceAndType(residence, type);
+    }
+
+    @PostMapping("/casual")
+    public ResponseEntity<CustomResponse<?>> saveIncomeCasual(
+            @RequestParam String description,
+            @RequestParam(required = false) BigDecimal amount,
+            @RequestParam Long paidDate,
+            @RequestParam Long residence,
+            @RequestParam Long incomeType,
+            @RequestParam(required = false) MultipartFile paidEvidence
+                                                              ) throws IOException, FileUploadException, FirebaseMessagingException {
+        return incomeUseCase.saveIncomeCasual(new IncomeCasualCreateData(description, amount, paidDate, residence, incomeType, paidEvidence));
+    }
+
+    @PutMapping("/casual/{id}")
+    public ResponseEntity<CustomResponse<?>> updateIncomeCasual(
+            @PathVariable Long id,
+            @RequestParam String description,
+            @RequestParam(required = false) BigDecimal amount,
+            @RequestParam Long paidDate,
+            @RequestParam Long residence,
+            @RequestParam Long incomeType,
+            @RequestParam(required = false) MultipartFile paidEvidence
+                                                              ) throws IOException, FileUploadException, FirebaseMessagingException {
+        return incomeUseCase.updateIncomeCasual(id, new IncomeCasualUpdateData(description, amount, paidDate, residence, incomeType, paidEvidence));
     }
 
 }

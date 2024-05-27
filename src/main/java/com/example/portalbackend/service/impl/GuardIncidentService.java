@@ -57,7 +57,7 @@ public class GuardIncidentService implements IGuardIncidentService{
                     evidence = IncidentEvidence.builder()
                             .incident(guardIncident)
                             .build();
-                    String fileName = fileService.uploadFile(file);
+                    String fileName = fileService.uploadFile(file, null);
                     evidence.setFileUrl(BUCKET_URL + fileName);
                     evidence.setFileName(fileName);
                 } catch (FileUploadException | IOException e) {
@@ -94,7 +94,7 @@ public class GuardIncidentService implements IGuardIncidentService{
                     evidence = IncidentEvidence.builder()
                             .incident(guardIncident)
                             .build();
-                    String fileName = fileService.uploadFile(file);
+                    String fileName = fileService.uploadFile(file, null);
                     evidence.setFileUrl(BUCKET_URL + fileName);
                     evidence.setFileName(fileName);
                 } catch (FileUploadException | IOException e) {

@@ -1,5 +1,7 @@
 package com.example.portalbackend.service.spec;
 
+import com.example.portalbackend.api.dto.request.income.IncomeCasualCreateData;
+import com.example.portalbackend.api.dto.request.income.IncomeCasualUpdateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesCreateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesUpdateData;
 import com.example.portalbackend.domain.entity.Income;
@@ -21,7 +23,13 @@ public interface IIncomeService {
 
     Income saveIncomeFees(IncomeFeesCreateData data) throws IOException, FileUploadException;
 
+    Income saveIncomeCasual(IncomeCasualCreateData data) throws IOException, FileUploadException;
+
+    Income updateIncomeCasual(Long id, IncomeCasualUpdateData data) throws IOException, FileUploadException;
+
     Income updateIncomeFees(Long id, IncomeFeesUpdateData data) throws IOException, FileUploadException;
 
     void deleteIncome(Long id);
+
+    Income getLastByResidenceAndType(Long residence, Long incomeType);
 }

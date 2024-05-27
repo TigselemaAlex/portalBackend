@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface IncomeTypeRepository extends JpaRepository<IncomeType, Long>{
 
-    List<IncomeType> findAllByActiveIsTrue();
+
+    List<IncomeType> findAllByActiveIsTrueOrderById();
 
     List<IncomeType> findAllByActiveIsTrueAndPeriod(IncomeTypePeriod period);
 }

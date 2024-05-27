@@ -52,7 +52,7 @@ public class GuardService implements IGuardService {
 
     private void updateGuardPhoto(MultipartFile photo, String photoName, Guard guard) throws IOException, FileUploadException {
         if (photo != null && photo.getSize() > 0) {
-            photoName = fileService.uploadFile(photo);
+            photoName = fileService.uploadFile(photo, null);
             guard.setPhotoName(photoName);
             guard.setPhotoUrl(BUCKET_URL + photoName);
         }else {
