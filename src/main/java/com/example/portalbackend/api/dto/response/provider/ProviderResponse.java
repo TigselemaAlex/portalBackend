@@ -10,7 +10,8 @@ public record ProviderResponse(
         String address,
         String phone,
         String email,
-        String website
+        String website,
+        Boolean active
 ) {
     public ProviderResponse(Provider provider) {
         this(
@@ -21,6 +22,8 @@ public record ProviderResponse(
                 provider.getAddress(),
                 provider.getPhone(),
                 provider.getEmail(),
-                provider.getWebsite());
+                provider.getWebsite(),
+                provider.getActive()
+        );
     }
 }

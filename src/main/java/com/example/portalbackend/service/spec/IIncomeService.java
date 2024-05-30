@@ -31,5 +31,5 @@ public interface IIncomeService {
 
     void deleteIncome(Long id);
 
-    Income getLastByResidenceAndType(Long residence, Long incomeType);
+    Income getLastByResidenceAndTypeAndParking(Long residence, Long incomeType, Long parking);
 }

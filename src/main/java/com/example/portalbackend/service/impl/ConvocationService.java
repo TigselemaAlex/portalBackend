@@ -242,6 +242,16 @@ public class ConvocationService implements IConvocationService {
         return convocationParticipantRepository.findAllByConvocationIdAndResidenceUserId(id, userId);
     }
 
+    @Override
+    public Page<Convocation> findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(Pageable pageable) {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        List<ConvocationType> types = List.of(ConvocationType.ASSEMBLY_EXTRAORDINARY, ConvocationType.ASSEMBLY_ORDINARY);
+        return convocationRepository.findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(types, now, pageable);
+    }
+
     private String generateCode(ConvocationType type) {
         return "CONV-" + type.name().charAt(0) + "-" + String.format("%06d", convocationRepository.count() + 1);
     }

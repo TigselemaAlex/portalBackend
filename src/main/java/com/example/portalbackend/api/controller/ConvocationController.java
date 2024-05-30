@@ -91,6 +91,11 @@ public class ConvocationController {
         return convocationUseCase.setParticipantAttendance(id, data);
     }
 
-
+    @GetMapping("/calendar")
+    public ResponseEntity<CustomResponse<?>> findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(@PageableDefault(size = 10,
+            sort = "createdAt",
+            direction = Sort.Direction.ASC) Pageable pageable) {
+        return convocationUseCase.findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(pageable);
+    }
 
 }

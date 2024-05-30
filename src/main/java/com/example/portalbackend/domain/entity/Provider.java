@@ -2,6 +2,7 @@ package com.example.portalbackend.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -25,6 +26,8 @@ public class Provider extends AbstractEntity{
     private String phone;
     private String email;
     private String website;
+    @ManyToOne
+    private OutcomeType type;
     @OneToMany(mappedBy = "provider")
     private List<Outcome> outcomes;
 }

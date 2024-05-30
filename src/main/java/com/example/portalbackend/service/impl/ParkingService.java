@@ -3,6 +3,7 @@ package com.example.portalbackend.service.impl;
 import com.example.portalbackend.api.dto.request.parking.ParkingCreateData;
 import com.example.portalbackend.api.dto.request.parking.ParkingUpdateData;
 import com.example.portalbackend.domain.entity.Parking;
+import com.example.portalbackend.domain.entity.Residence;
 import com.example.portalbackend.domain.repository.ParkingRepository;
 import com.example.portalbackend.service.spec.IParkingGroupService;
 import com.example.portalbackend.service.spec.IParkingService;
@@ -56,5 +57,15 @@ public class ParkingService implements IParkingService {
             parking.setStatus(ParkingStatus.OCCUPIED);
         }
         return parkingRepository.save(parking);
+    }
+
+    @Override
+    public Parking findByIdAndResidence(Long id, Residence residence) {
+        return parkingRepository.findByIdAndResidence(id, residence).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
+    public List<Parking> findAllByResidence(Residence residence) {
+        return parkingRepository.findAllByResidence(residence);
     }
 }

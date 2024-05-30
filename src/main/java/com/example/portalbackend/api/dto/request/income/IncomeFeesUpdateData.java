@@ -19,6 +19,7 @@ public record IncomeFeesUpdateData(
         Long paidUntil,
         @NotNull(message = "Residencia es requerida")
         Long residence,
+        Long parking,
         @NotNull(message = "Tipo de ingreso es requerido")
         Long incomeType,
         MultipartFile paidEvidence

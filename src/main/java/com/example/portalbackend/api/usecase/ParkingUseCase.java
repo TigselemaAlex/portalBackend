@@ -8,6 +8,7 @@ import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.service.spec.IParkingService;
 import com.example.portalbackend.service.spec.IParkingTypeService;
+import com.example.portalbackend.service.spec.IResidenceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,10 +20,12 @@ public class ParkingUseCase extends AbstractUseCase{
 
     private final IParkingService parkingService;
     private final IParkingTypeService parkingTypeService;
-    protected ParkingUseCase(CustomResponseBuilder customResponseBuilder, IParkingService parkingService, IParkingTypeService parkingTypeService) {
+    private final IResidenceService residenceService;
+    protected ParkingUseCase(CustomResponseBuilder customResponseBuilder, IParkingService parkingService, IParkingTypeService parkingTypeService, IResidenceService residenceService) {
         super(customResponseBuilder);
         this.parkingService = parkingService;
         this.parkingTypeService = parkingTypeService;
+        this.residenceService = residenceService;
     }
 
     public ResponseEntity<CustomResponse<?>> findByGroup(Long groupId) {
@@ -45,6 +48,12 @@ public class ParkingUseCase extends AbstractUseCase{
     public ResponseEntity<CustomResponse<?>> updateParkingType(final Long id, final ParkingTypeUpdateData data) {
         ParkingTypeResponse response = new ParkingTypeResponse(parkingTypeService.update(data, id));
         return customResponseBuilder.build(HttpStatus.OK, "Parqueadero actualizado", response);
+    }
+
+    public ResponseEntity<CustomResponse<?>> findAllByResidence(Long residence){
+        List<ParkingResponse> responses = parkingService.findAllByResidence(residenceService.findById(residence))
+                .stream().map(ParkingResponse::new).toList();
+        return customResponseBuilder.build(HttpStatus.OK, "Listado de parqueaderos por residencia", responses);
     }
 
 }

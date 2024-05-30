@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +29,8 @@ public class Income extends AbstractEntity{
     private IncomeType type;
     @ManyToOne
     private Residence residence;
+    @ManyToOne
+    private Parking parking;
     @OneToOne(mappedBy = "income", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private PaidEvidence paidEvidence;
 

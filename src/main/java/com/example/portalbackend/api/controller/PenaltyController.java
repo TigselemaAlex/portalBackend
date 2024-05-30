@@ -99,4 +99,6 @@ public class PenaltyController {
     public ResponseEntity<CustomResponse<?>> delete(@PathVariable Long id) {
         return penaltyUseCase.delete(id);
     }
+
+
 }

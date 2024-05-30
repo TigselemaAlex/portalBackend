@@ -156,4 +156,16 @@ public class ConvocationUseCase extends AbstractUseCase {
     }
 
 
+    public ResponseEntity<CustomResponse<?>> findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(Pageable pageable) {
+        Page<ConvocationResponse> response = convocationService
+                .findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(pageable)
+                .map(convocation ->
+                        {
+                            return new ConvocationResponse(convocation, 303 - convocationService.countTotalMissing(convocation.getId()), convocationService.countTotalMissing(convocation.getId()));
+                        }
+                );
+        PageResponse pageResponse = new PageResponse(response);
+        return customResponseBuilder.build(HttpStatus.OK, "Convocatorias encontradas exitosamente", pageResponse);
+    }
+
 }

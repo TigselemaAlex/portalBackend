@@ -36,4 +36,9 @@ public class ParkingController {
         return parkingUseCase.updateParkingType(id, data);
     }
 
+    @GetMapping("/residence/{id}")
+    public ResponseEntity<CustomResponse<?>> findAllByResidence(@PathVariable Long id) {
+        return parkingUseCase.findAllByResidence(id);
+    }
+
 }

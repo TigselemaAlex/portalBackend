@@ -62,10 +62,11 @@ public class IncomeController {
             @RequestParam Long paidSince,
             @RequestParam Long paidUntil,
             @RequestParam Long residence,
+            @RequestParam(required = false) Long parking,
             @RequestParam Long incomeType,
             @RequestParam MultipartFile paidEvidence
                                                             ) throws IOException, FileUploadException, FirebaseMessagingException {
-        return incomeUseCase.saveIncomeFees(new IncomeFeesCreateData(description, amount, paidDate, paidSince, paidUntil, residence, incomeType, paidEvidence));
+        return incomeUseCase.saveIncomeFees(new IncomeFeesCreateData(description, amount, paidDate, paidSince, paidUntil, residence, parking,incomeType, paidEvidence));
     }
 
     @PutMapping("/fees/{id}")
@@ -77,10 +78,11 @@ public class IncomeController {
             @RequestParam Long paidSince,
             @RequestParam Long paidUntil,
             @RequestParam Long residence,
+            @RequestParam(required = false) Long parking,
             @RequestParam Long incomeType,
             @RequestParam(required = false) MultipartFile paidEvidence
                                                               ) throws IOException, FileUploadException, FirebaseMessagingException {
-        return incomeUseCase.updateIncomeFees(id, new IncomeFeesUpdateData(description, amount, paidDate, paidSince, paidUntil, residence, incomeType, paidEvidence));
+        return incomeUseCase.updateIncomeFees(id, new IncomeFeesUpdateData(description, amount, paidDate, paidSince, paidUntil, residence,parking, incomeType, paidEvidence));
     }
 
     @DeleteMapping("/{id}")
@@ -92,8 +94,10 @@ public class IncomeController {
     @GetMapping("/active/last")
     public ResponseEntity<CustomResponse<?>> getLastByResidenceAndType(
             @RequestParam Long residence,
-            @RequestParam Long type) {
-        return incomeUseCase.getLastByResidenceAndType(residence, type);
+            @RequestParam Long type,
+            @RequestParam(required = false) Long parking)
+    {
+        return incomeUseCase.getLastByResidenceAndType(residence, type, parking);
     }
 
     @PostMapping("/casual")

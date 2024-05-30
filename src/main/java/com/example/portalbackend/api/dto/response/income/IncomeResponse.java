@@ -2,6 +2,7 @@ package com.example.portalbackend.api.dto.response.income;
 
 import com.example.portalbackend.api.dto.response.income_type.IncomeTypeResponse;
 import com.example.portalbackend.api.dto.response.paid_evidence.PaidEvidenceResponse;
+import com.example.portalbackend.api.dto.response.parking.ParkingResponse;
 import com.example.portalbackend.api.dto.response.residence.ResidenceResponse;
 import com.example.portalbackend.domain.entity.Income;
 
@@ -19,6 +20,7 @@ public record IncomeResponse(
         Calendar paidUntil,
         IncomeTypeResponse type,
         ResidenceResponse residence,
+        ParkingResponse parking,
         PaidEvidenceResponse paidEvidence,
         Boolean canBeDeleted
 ) {
@@ -36,6 +38,8 @@ public record IncomeResponse(
                 new IncomeTypeResponse(income.getType()),
                 income.getResidence() == null ? null :
                 new ResidenceResponse(income.getResidence()),
+                income.getParking() == null ? null :
+                new ParkingResponse(income.getParking()),
                 income.getPaidEvidence() == null ? null :
                 new PaidEvidenceResponse(income.getPaidEvidence()),
                 income.getCanBeDeleted()
