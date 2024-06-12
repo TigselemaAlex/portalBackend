@@ -168,16 +168,20 @@ public class DashboardService implements IDashboardService {
 
     @Override
     public TreasureDashboardResponse getTreasureDashboard(Calendar from, Calendar to) {
-        BigDecimal totalIncomes = BigDecimal.valueOf(incomeRepository.sumTotalIncomes());
-        BigDecimal totalOutcomes = BigDecimal.valueOf(outcomeRepository.sumTotalOutcomes());
-        BigDecimal totalPenalties = BigDecimal.valueOf(penaltyRepository.sumTotalPenalties());
+        Double totalIncomesDB = incomeRepository.sumTotalIncomes();
+        Double totalOutcomesDB = outcomeRepository.sumTotalOutcomes();
+        Double totalPenaltiesDB = penaltyRepository.sumTotalPenalties();
+
+        BigDecimal totalIncomes = BigDecimal.valueOf(totalIncomesDB != null ? totalIncomesDB : 0);
+        BigDecimal totalOutcomes = BigDecimal.valueOf(totalOutcomesDB != null ? totalOutcomesDB : 0);
+        BigDecimal totalPenalties = BigDecimal.valueOf(totalPenaltiesDB != null ? totalPenaltiesDB : 0);
         BigDecimal totalTreasure = totalIncomes.add(totalPenalties).subtract(totalOutcomes);
 
         Calendar firstDayOfThisMonth = Calendar.getInstance();
         firstDayOfThisMonth.set(Calendar.DAY_OF_MONTH, 1);
         firstDayOfThisMonth.set(Calendar.HOUR_OF_DAY, 0);
         firstDayOfThisMonth.set(Calendar.MINUTE, 0);
-        firstDayOfThisMonth.set(Calendar.SECOND, 0);
+        firstDayOfThisMonth.set(Calendar.SECOND, 1);
 
         Calendar lastDayOfThisMonth = Calendar.getInstance();
         lastDayOfThisMonth.set(Calendar.DAY_OF_MONTH, lastDayOfThisMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -185,9 +189,15 @@ public class DashboardService implements IDashboardService {
         lastDayOfThisMonth.set(Calendar.MINUTE, 59);
         lastDayOfThisMonth.set(Calendar.SECOND, 59);
 
-        BigDecimal totalIncomesThisMonth = BigDecimal.valueOf(incomeRepository.sumTotalIncomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth));
-        BigDecimal totalOutcomesThisMonth = BigDecimal.valueOf(outcomeRepository.sumTotalOutcomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth));
-        BigDecimal totalPenaltiesThisMonth = BigDecimal.valueOf(penaltyRepository.sumTotalPenaltiesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth));
+        Double totalIncomesThisMonthDB = incomeRepository.sumTotalIncomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        Double totalOutcomesThisMonthDB = outcomeRepository.sumTotalOutcomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        Double totalPenaltiesThisMonthDB = penaltyRepository.sumTotalPenaltiesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        BigDecimal totalIncomesThisMonth = BigDecimal.valueOf(totalIncomesThisMonthDB != null ? totalIncomesThisMonthDB : 0);
+        BigDecimal totalOutcomesThisMonth = BigDecimal.valueOf(totalOutcomesThisMonthDB != null ? totalOutcomesThisMonthDB : 0);
+        BigDecimal totalPenaltiesThisMonth = BigDecimal.valueOf(totalPenaltiesThisMonthDB != null ? totalPenaltiesThisMonthDB : 0);
         BigDecimal totalTreasureThisMonth = totalIncomesThisMonth.add(totalPenaltiesThisMonth).subtract(totalOutcomesThisMonth);
 
         if(from != null && to != null){

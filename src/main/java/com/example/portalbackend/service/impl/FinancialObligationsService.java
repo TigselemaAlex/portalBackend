@@ -95,7 +95,7 @@ public class FinancialObligationsService implements IFinancialObligationsService
 
 
 
-    @Scheduled(cron = "0 1 15 29 * ?", zone = "America/Guayaquil")
+    @Scheduled(cron = "0 0 13 25 * ?", zone = "America/Guayaquil")
     public void getFinancialObligationsStatus() {
         List<User> users = userService.findAllActive("", "", "");
         users.forEach(

@@ -15,7 +15,7 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long>, JpaSpec
 
     Optional<Penalty> findFirstByOrderByIdDesc();
 
-    @Query("SELECT SUM(p.amount) FROM Penalty p WHERE p.active = true")
+    @Query("SELECT SUM(p.amount) FROM Penalty p WHERE p.active = true AND p.status = 'PAID'")
     Double sumTotalPenalties();
 
     @Query("SELECT SUM(p.amount) FROM Penalty p WHERE p.active = true AND p.status = 'PAID' AND (p.paidDate >= ?1 AND p.paidDate <= ?2)")

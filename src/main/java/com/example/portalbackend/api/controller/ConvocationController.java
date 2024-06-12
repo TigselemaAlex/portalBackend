@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -21,9 +22,12 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/protected/convocation")
 @RequiredArgsConstructor
+
 public class ConvocationController {
     private final ConvocationUseCase convocationUseCase;
 
+
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PostMapping
     public ResponseEntity<CustomResponse<?>> createConvocation(@Valid @RequestBody ConvocationCreateData data) throws FirebaseMessagingException {
         return convocationUseCase.createConvocation(data);
@@ -43,6 +47,7 @@ public class ConvocationController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> updateConvocation(
             @PathVariable Long id,
@@ -51,6 +56,7 @@ public class ConvocationController {
         return convocationUseCase.updateConvocation(id, data);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> deleteConvocation(@PathVariable Long id) {
         return convocationUseCase.deleteConvocation(id);
@@ -61,12 +67,14 @@ public class ConvocationController {
         return convocationUseCase.findAllParticipants(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PutMapping("/{id}/finalize")
     public ResponseEntity<CustomResponse<?>> finalizeConvocation(@PathVariable Long id) {
         convocationUseCase.finalizeConvocation(id);
         return convocationUseCase.finalizeConvocation(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PutMapping("/{id}/attendance")
     public ResponseEntity<CustomResponse<?>> updateAttendance(
             @PathVariable Long id,
@@ -97,5 +105,7 @@ public class ConvocationController {
             direction = Sort.Direction.ASC) Pageable pageable) {
         return convocationUseCase.findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(pageable);
     }
+
+
 
 }

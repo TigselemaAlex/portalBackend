@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -93,6 +94,9 @@ public class AssemblyQuestionService implements IAssemblyQuestionService {
     public AssemblyQuestion toggleEnabledVote(Long id) {
         AssemblyQuestion assemblyQuestion = findAssemblyQuestionById(id);
         if (assemblyQuestion.getConvocation().getFinalized()){
+            return null;
+        }
+        if(Calendar.getInstance().before(assemblyQuestion.getConvocation().getDate())){
             return null;
         }
         assemblyQuestion.setEnabled(!assemblyQuestion.getEnabled());

@@ -1,6 +1,7 @@
 package com.example.portalbackend.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -30,23 +31,18 @@ public class FileService implements IFileService {
 
     @Override
     public String uploadFile(MultipartFile multipartFile, String code) throws FileUploadException, IOException {
-        //Convert MultipartFile to File
+
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         try(FileOutputStream fos = new FileOutputStream(file)){
             fos.write(multipartFile.getBytes());
         }
-        //Generate the file name
+
         String fileName = generateFileName(multipartFile);
         if (code != null && !code.isEmpty()) {
             fileName = code + "_" + fileName;
         }
-        //Upload the file to S3 bucket
+
         PutObjectRequest request = new PutObjectRequest(bucketName, fileName, file);
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType(FilenameUtils.getExtension(multipartFile.getOriginalFilename()));
-        metadata.addUserMetadata("Title", "File Upload-" + fileName);
-        metadata.setContentLength(file.length());
-        request.setMetadata(metadata);
         amazonS3.putObject(request);
         file.delete();
         return fileName;

@@ -2,7 +2,7 @@ package com.example.portalbackend.util.geolocation;
 
 public class GeolocationUtils {
     public static double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371e3; // radio de la Tierra en metros
+        double R = 6371e3;
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +

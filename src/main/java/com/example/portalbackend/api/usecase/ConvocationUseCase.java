@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
@@ -44,7 +45,7 @@ public class ConvocationUseCase extends AbstractUseCase {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final IConvocationService convocationService;
-    private static final String CONFIG_FILE_PATH = "geolocation-config.json";
+    private static final String CONFIG_FILE_PATH = System.getProperty("user.dir") + File.separator + "geolocation-config.json";
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
     private final IUserService userService;
@@ -128,10 +129,9 @@ public class ConvocationUseCase extends AbstractUseCase {
 
     public ResponseEntity<CustomResponse<?>> setParticipantAttendance(Long id, ConvocationParticipantAttendanceData attendanceData) throws IOException {
         GeolocationData data = null;
-        Path path = Path.of("src/main/resources/" + CONFIG_FILE_PATH);
-        if (path.toFile().exists()) {
-            Resource resource = resourceLoader.getResource("file:" + path);
-            data = objectMapper.readValue(resource.getInputStream(), GeolocationData.class);
+        File file = new File(CONFIG_FILE_PATH);
+        if (file.exists()) {
+            data = objectMapper.readValue(file, GeolocationData.class);
         }
         if (data == null) {
             return customResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener la configuración de geolocalización");

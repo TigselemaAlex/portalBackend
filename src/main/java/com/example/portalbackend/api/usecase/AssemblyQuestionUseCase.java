@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
@@ -33,7 +34,7 @@ public class AssemblyQuestionUseCase extends AbstractUseCase{
 
     private final IAssemblyQuestionService assemblyQuestionService;
     private final IPushNotificationService pushNotificationService;
-    private static final String CONFIG_FILE_PATH = "geolocation-config.json";
+    private static final String CONFIG_FILE_PATH = System.getProperty("user.dir") + File.separator + "geolocation-config.json";
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
 
@@ -97,10 +98,9 @@ public class AssemblyQuestionUseCase extends AbstractUseCase{
     public ResponseEntity<CustomResponse<?>> updateVote(ParticipantVoteData voteData) throws IOException {
 
         GeolocationData data = null;
-        Path path = Path.of("src/main/resources/" + CONFIG_FILE_PATH);
-        if (path.toFile().exists()) {
-            Resource resource = resourceLoader.getResource("file:" + path);
-            data = objectMapper.readValue(resource.getInputStream(), GeolocationData.class);
+        File file = new File(CONFIG_FILE_PATH);
+        if (file.exists()) {
+            data = objectMapper.readValue(file, GeolocationData.class);
         }
         if (data == null) {
             return customResponseBuilder.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error al obtener la configuración de geolocalización");

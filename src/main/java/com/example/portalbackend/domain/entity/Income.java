@@ -6,7 +6,6 @@ import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
-import java.util.List;
 
 @Entity
 @Getter

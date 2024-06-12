@@ -8,6 +8,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,15 +16,18 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/protected/assembly-votes")
 @RequiredArgsConstructor
+
 public class AssemblyVoteController {
 
     private final AssemblyQuestionUseCase assemblyQuestionUseCase;
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PostMapping
     public ResponseEntity<CustomResponse<?>> createAssemblyQuestion(@Valid @RequestBody AssemblyQuestionData data) {
         return assemblyQuestionUseCase.createAssemblyQuestion(data);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @GetMapping("/convocation/{id}")
     public ResponseEntity<CustomResponse<?>> findAllAssemblyQuestions(@PathVariable Long id) {
         return assemblyQuestionUseCase.findAllAssemblyQuestions(id);
@@ -34,16 +38,19 @@ public class AssemblyVoteController {
         return assemblyQuestionUseCase.findAllByConvocationAndEnabledIsTrueOrderById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> updateAssemblyQuestion(@PathVariable Long id, @Valid @RequestBody AssemblyQuestionData data) {
         return assemblyQuestionUseCase.updateAssemblyQuestion(id, data);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @DeleteMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> deleteAssemblyQuestion(@PathVariable Long id) {
         return assemblyQuestionUseCase.deleteAssemblyQuestion(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
     @PutMapping("/toggle-enabled-vote/{id}")
     public ResponseEntity<CustomResponse<?>> toggleEnabledVote(@PathVariable Long id) throws FirebaseMessagingException {
         return assemblyQuestionUseCase.toggleEnabledVote(id);
