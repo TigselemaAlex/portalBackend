@@ -33,4 +33,6 @@ Optional<Income> findFirstByActiveIsTrueAndResidenceAndTypeOrderByPaidUntilDesc(
 
     Optional<Income> findFirstByActiveIsTrueAndResidenceAndTypeAndParkingOrderByPaidUntilDesc(Residence residence, IncomeType type, Parking parking);
 
+    Optional<Income> findFirstByActiveIsTrueAndParkingAndTypeOrderByPaidUntilDesc(Parking parking, IncomeType type);
+
 }

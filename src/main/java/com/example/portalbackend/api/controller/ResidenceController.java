@@ -28,11 +28,23 @@ public class ResidenceController {
         return residenceUseCase.findAll(search, pageable);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<CustomResponse<?>> findAllResidencesWithoutPagination() {
+        return residenceUseCase.findAllWithoutPagination();
+    }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRESIDENT', 'ROLE_VICE_PRESIDENT')")
     @PutMapping("/{id}")
     public ResponseEntity<CustomResponse<?>> updateResidence(
             @PathVariable Long id,
             @Valid @RequestBody ResidenceUpdateData residence) {
         return residenceUseCase.update(id, residence);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomResponse<?>> findAllHistoryResidence(
+            @PathVariable Long id
+            ) {
+        return residenceUseCase.findResidenceHistory(id);
     }
 }

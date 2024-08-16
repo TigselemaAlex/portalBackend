@@ -27,4 +27,19 @@ public class FinancialObligationsController {
     public ResponseEntity<CustomResponse<?>> getFinancialObligations(@PathVariable Long id) {
         return financialObligationsUseCase.getFinancialObligationsStatus(id);
     }
+
+    @GetMapping("/residence/{residence}")
+    public ResponseEntity<CustomResponse<?>> getFinancialObligationsStatusByResidence(@PathVariable Long residence) {
+        return financialObligationsUseCase.getFinancialObligationsStatusByResidence(residence);
+    }
+
+    @GetMapping("/blue-parkings")
+    public ResponseEntity<CustomResponse<?>> getBlueParkingReport() {
+        return financialObligationsUseCase.getBlueParkingReport();
+    }
+
+    @GetMapping("/aliquots")
+    public ResponseEntity<CustomResponse<?>> getAliquotsReport() {
+        return financialObligationsUseCase.getAliquotsReport();
+    }
 }

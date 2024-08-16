@@ -5,11 +5,11 @@ import com.example.portalbackend.api.dto.response.financial_obligation.Financial
 import com.example.portalbackend.api.dto.response.income.IncomeResponse;
 import com.example.portalbackend.api.dto.response.penalty.PenaltyResponse;
 import com.example.portalbackend.api.dto.response.residence.ResidenceResponse;
-import com.example.portalbackend.domain.entity.Income;
-import com.example.portalbackend.domain.entity.IncomeType;
-import com.example.portalbackend.domain.entity.User;
+import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.repository.IncomeRepository;
+import com.example.portalbackend.domain.repository.ParkingRepository;
 import com.example.portalbackend.domain.repository.PenaltyRepository;
+import com.example.portalbackend.domain.repository.ResidenceRepository;
 import com.example.portalbackend.service.spec.IFinancialObligationsServices;
 import com.example.portalbackend.service.spec.IIncomeTypeService;
 import com.example.portalbackend.service.spec.IUserService;
@@ -18,6 +18,7 @@ import com.example.portalbackend.util.calendar.CalendarUtil;
 import com.example.portalbackend.util.enumerate.IncomeTypePeriod;
 import com.example.portalbackend.util.enumerate.PaidStatus;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -41,10 +39,11 @@ public class FinancialObligationsService implements IFinancialObligationsService
     private final PenaltyRepository penaltyRepository;
     private final IIncomeTypeService incomeTypeService;
     private final PushNotificationService pushNotificationService;
+    private final ParkingRepository parkingRepository;
+    private final ResidenceRepository residenceRepository;
     @Override
     public FinancialObligationResponse getFinancialObligations(Long id) {
         User user = userService.findById(id);
-
         List<FinancialObligationResponse.FinancialObligationPerResidence> residencesObligations = new ArrayList<>();
         List<FinancialObligationResponse.PenaltiesPerResidence> residencesPaidPenalties = new ArrayList<>();
         List<FinancialObligationResponse.PenaltiesPerResidence> residencesUnpaidPenalties =new ArrayList<>();
@@ -109,6 +108,67 @@ public class FinancialObligationsService implements IFinancialObligationsService
                         throw new RuntimeException(e);
                     }
                 });
+    }
+
+    @Override
+    public FinancialObligationStatusResponse getFinancialObligationsStatusByResidence(Residence residence) {
+        IncomeType aliquotType = incomeTypeService.findById(1L);
+        Income aliquot = incomeRepository.findFirstByActiveIsTrueAndResidenceAndTypeOrderByPaidUntilDesc(residence, aliquotType)
+                .orElse(null);
+        Integer aliquotDelayed = -1;
+        Calendar now = Calendar.getInstance();
+        List<FinancialObligationStatusResponse.FinancialStatusDetail> financialStatusDetails = new ArrayList<>();
+
+        if (aliquot != null) {
+            aliquotDelayed = 0;
+            if(aliquot.getPaidUntil().before(now)){
+                aliquotDelayed = CalendarUtil.getMonthDifference(aliquot.getPaidUntil(), now) - 1;
+            }
+        }
+        List<FinancialObligationStatusResponse.FinancialStatusDetailComplement> complements = new ArrayList<>();
+        complements.add(FinancialObligationStatusResponse.FinancialStatusDetailComplement.builder()
+                .type("ALICUOTAS")
+                .totalMonthsDelayed(aliquotDelayed)
+                .build());
+        financialStatusDetails.add(FinancialObligationStatusResponse.FinancialStatusDetail.builder()
+                .complement(complements)
+                .residence(new ResidenceResponse(residence))
+                .build());
+        return new FinancialObligationStatusResponse(financialStatusDetails);
+    }
+
+    @Override
+    public List<IncomeResponse> getBlueParkingReport() {
+        IncomeType blueParkingType = incomeTypeService.findById(2L);
+        List<Parking> occupiedParkings = parkingRepository.findAllByResidenceIsNotNull();
+        List<Income> incomes = new ArrayList<>();
+        occupiedParkings.forEach(
+                parking -> {
+                    Optional<Income> incomeOptional = incomeRepository
+                            .findFirstByActiveIsTrueAndParkingAndTypeOrderByPaidUntilDesc(parking, blueParkingType);
+                    incomeOptional.ifPresent(incomes::add);
+                }
+        );
+        return incomes.stream().sorted(
+                Comparator.comparing(o -> o.getParking().getId())
+        ).map(IncomeResponse::new).toList();
+    }
+
+    @Override
+    public List<IncomeResponse> getAliquotsReport() {
+        IncomeType aliquotType = incomeTypeService.findById(1L);
+        List<Residence> residences = residenceRepository.findAll();
+        List<Income> incomes = new ArrayList<>();
+        residences.forEach(
+                residence -> {
+                    Optional<Income> incomeOptional = incomeRepository
+                            .findFirstByActiveIsTrueAndResidenceAndTypeOrderByPaidUntilDesc(residence, aliquotType);
+                    incomeOptional.ifPresent(incomes::add);
+                }
+        );
+        return incomes.stream().sorted(
+                Comparator.comparing(o -> o.getResidence().getId())
+        ).map(IncomeResponse::new).toList();
     }
 
     @Override

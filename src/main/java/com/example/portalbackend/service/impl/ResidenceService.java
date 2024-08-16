@@ -4,7 +4,9 @@ import com.example.portalbackend.api.dto.request.residence.ResidenceCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceUpdateData;
 import com.example.portalbackend.domain.entity.Passage;
 import com.example.portalbackend.domain.entity.Residence;
+import com.example.portalbackend.domain.entity.ResidenceHistory;
 import com.example.portalbackend.domain.entity.User;
+import com.example.portalbackend.domain.repository.ResidenceHistoryRepository;
 import com.example.portalbackend.domain.repository.ResidenceRepository;
 import com.example.portalbackend.service.spec.IPassageService;
 import com.example.portalbackend.service.spec.IResidenceService;
@@ -17,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -27,6 +31,7 @@ public class ResidenceService implements IResidenceService{
     private final ResidenceRepository residenceRepository;
     private final IUserService userService;
     private final IPassageService passageService;
+    private final ResidenceHistoryRepository residenceHistoryRepository;
 
     @Override
     public Residence update(ResidenceUpdateData residence, Long id) {
@@ -37,7 +42,22 @@ public class ResidenceService implements IResidenceService{
         }else{
             residenceToUpdate.setUser(null);
         }
-        return residenceRepository.save(residenceToUpdate);
+        var now = Calendar.getInstance();
+        var residenceUpdated = residenceRepository.save(residenceToUpdate);
+        var lastHistory = residenceHistoryRepository.findFirstByResidenceAndFinishDateIsNull(residenceToUpdate);
+        if(lastHistory.isPresent()){
+            var history = lastHistory.get();
+            history.setFinishDate(now);
+            residenceHistoryRepository.save(history);
+        }
+        residenceHistoryRepository.save(
+                ResidenceHistory.builder()
+                        .residence(residenceUpdated)
+                        .user(residenceUpdated.getUser())
+                        .startDate(now)
+                        .build()
+        );
+        return residenceUpdated;
     }
 
     @Override
@@ -50,8 +70,18 @@ public class ResidenceService implements IResidenceService{
         if (Objects.nonNull(residence.user())) {
             User user = userService.findById(residence.user());
             residenceToSave.setUser(user);
+
         }
-        return residenceRepository.save(residenceToSave);
+        var residenceSaved = residenceRepository.save(residenceToSave);
+        residenceHistoryRepository.save(
+                ResidenceHistory.builder()
+                        .residence(residenceSaved)
+                        .user(residenceSaved.getUser())
+                        .startDate(Calendar.getInstance())
+                        .build()
+        );
+
+        return residenceSaved;
     }
 
     @Override
@@ -64,5 +94,16 @@ public class ResidenceService implements IResidenceService{
     @Transactional(readOnly = true)
     public Page<Residence> findAll(String number, Pageable pageable) {
         return residenceRepository.findAllByNumberContainingIgnoreCaseOrUserNamesContainingIgnoreCaseOrUserSurnamesContainingIgnoreCase(number, number,number,pageable);
+    }
+
+    @Override
+    public List<Residence> findAllNumbers() {
+        return residenceRepository.findAll();
+    }
+
+    @Override
+    public List<ResidenceHistory> findResidenceHistory(Long id) {
+        var residence = findById(id);
+        return residenceHistoryRepository.findAllByResidence(residence);
     }
 }

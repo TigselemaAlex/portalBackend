@@ -15,4 +15,5 @@ public interface ParkingRepository extends JpaRepository<Parking, Long> {
     Long countByGroupTypeIdAndResidenceIsNotNull(Long id);
     Optional<Parking> findByIdAndResidence(Long id, Residence residence);
     List<Parking> findAllByResidence(Residence residence);
+    List<Parking> findAllByResidenceIsNotNull();
 }
