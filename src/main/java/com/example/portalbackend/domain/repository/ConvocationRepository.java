@@ -2,11 +2,14 @@ package com.example.portalbackend.domain.repository;
 
 import com.example.portalbackend.domain.entity.Convocation;
 import com.example.portalbackend.util.enumerate.ConvocationType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Calendar;
+import java.util.List;
 
 public interface ConvocationRepository extends JpaRepository<Convocation, Long>, JpaSpecificationExecutor<Convocation> {
 
@@ -15,5 +18,6 @@ public interface ConvocationRepository extends JpaRepository<Convocation, Long>,
 
     Long countByDateBetweenAndFinalizedIsTrueAndType(Calendar start, Calendar end, ConvocationType type);
 
+    Page<Convocation> findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual(List<ConvocationType> types,Calendar from ,Pageable pageable);
 
 }

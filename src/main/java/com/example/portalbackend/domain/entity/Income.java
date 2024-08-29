@@ -28,6 +28,8 @@ public class Income extends AbstractEntity{
     private IncomeType type;
     @ManyToOne
     private Residence residence;
+    @ManyToOne
+    private Parking parking;
     @OneToOne(mappedBy = "income", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private PaidEvidence paidEvidence;
 

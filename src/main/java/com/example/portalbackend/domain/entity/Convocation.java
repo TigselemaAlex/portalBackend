@@ -34,5 +34,7 @@ public class Convocation extends AbstractEntity{
     private List<ConvocationParticipant> participants;
     @OneToMany(mappedBy = "convocation", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<AssemblyQuestion> assemblyQuestions;
+    @OneToMany(mappedBy = "convocation")
+    private List<Minutes> minutes;
 
 }

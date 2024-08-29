@@ -20,7 +20,6 @@ public class Residence extends AbstractEntity{
     @ManyToOne
     @JoinColumn(nullable = false)
     private Passage passage;
-
     @OneToMany(mappedBy = "residence")
     private List<Parking> parkings;
 }

@@ -6,11 +6,13 @@ import com.example.portalbackend.api.usecase.ParkingUseCase;
 import com.example.portalbackend.common.CustomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/protected/parkings")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
 public class ParkingController {
 
     private final ParkingUseCase parkingUseCase;
@@ -34,6 +36,11 @@ public class ParkingController {
     @PutMapping("/types/{id}")
     public ResponseEntity<CustomResponse<?>> updateType(@PathVariable Long id, @RequestBody ParkingTypeUpdateData data) {
         return parkingUseCase.updateParkingType(id, data);
+    }
+
+    @GetMapping("/residence/{id}")
+    public ResponseEntity<CustomResponse<?>> findAllByResidence(@PathVariable Long id) {
+        return parkingUseCase.findAllByResidence(id);
     }
 
 }

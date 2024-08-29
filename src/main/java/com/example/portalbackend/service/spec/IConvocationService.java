@@ -9,6 +9,7 @@ import com.example.portalbackend.util.enumerate.ConvocationType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Calendar;
 import java.util.List;
 
 public interface IConvocationService {
@@ -39,5 +40,7 @@ public interface IConvocationService {
 
     Convocation findFirstByDateBetweenAndFinalizedIsFalse();
     List<ConvocationParticipant> findAllByConvocationIdAndResidenceUserId(Long id, Long userId);
+
+    Page<Convocation> findAllByActiveIsTrueAndTypeInAndDateGreaterThanEqual( Pageable pageable);
 
 }

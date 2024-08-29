@@ -2,17 +2,24 @@ package com.example.portalbackend.service.impl;
 
 import com.example.portalbackend.api.dto.response.dashboard.AdminDashboardResponse;
 import com.example.portalbackend.api.dto.response.dashboard.PresidentDashboardResponse;
+import com.example.portalbackend.api.dto.response.dashboard.TreasureDashboardResponse;
+import com.example.portalbackend.api.dto.response.income.IncomeResponse;
+import com.example.portalbackend.api.dto.response.outcome.OutcomeResponse;
+import com.example.portalbackend.api.dto.response.penalty.PenaltyResponse;
 import com.example.portalbackend.domain.repository.*;
 import com.example.portalbackend.service.spec.IDashboardService;
 import com.example.portalbackend.util.enumerate.ConvocationType;
 import com.example.portalbackend.util.enumerate.GuardActivityStatus;
+import com.example.portalbackend.util.enumerate.PaidStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @Transactional
@@ -31,6 +38,10 @@ public class DashboardService implements IDashboardService {
     private final IncidentTypeRepository incidentTypeRepository;
     private final ParkingRepository parkingRepository;
     private final ParkingTypeRepository parkingTypeRepository;
+
+    private final IncomeRepository incomeRepository;
+    private final OutcomeRepository outcomeRepository;
+    private final PenaltyRepository penaltyRepository;
 
 
     @Override
@@ -153,5 +164,98 @@ public class DashboardService implements IDashboardService {
                 monthlyGuardActivity,
                 monthlyGuardIncidentType
         );
+    }
+
+    @Override
+    public TreasureDashboardResponse getTreasureDashboard(Calendar from, Calendar to) {
+        Double totalIncomesDB = incomeRepository.sumTotalIncomes();
+        Double totalOutcomesDB = outcomeRepository.sumTotalOutcomes();
+        Double totalPenaltiesDB = penaltyRepository.sumTotalPenalties();
+
+        BigDecimal totalIncomes = BigDecimal.valueOf(totalIncomesDB != null ? totalIncomesDB : 0);
+        BigDecimal totalOutcomes = BigDecimal.valueOf(totalOutcomesDB != null ? totalOutcomesDB : 0);
+        BigDecimal totalPenalties = BigDecimal.valueOf(totalPenaltiesDB != null ? totalPenaltiesDB : 0);
+        BigDecimal totalTreasure = totalIncomes.add(totalPenalties).subtract(totalOutcomes);
+
+        Calendar firstDayOfThisMonth = Calendar.getInstance();
+        firstDayOfThisMonth.set(Calendar.DAY_OF_MONTH, 1);
+        firstDayOfThisMonth.set(Calendar.HOUR_OF_DAY, 0);
+        firstDayOfThisMonth.set(Calendar.MINUTE, 0);
+        firstDayOfThisMonth.set(Calendar.SECOND, 1);
+
+        Calendar lastDayOfThisMonth = Calendar.getInstance();
+        lastDayOfThisMonth.set(Calendar.DAY_OF_MONTH, lastDayOfThisMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+        lastDayOfThisMonth.set(Calendar.HOUR_OF_DAY, 23);
+        lastDayOfThisMonth.set(Calendar.MINUTE, 59);
+        lastDayOfThisMonth.set(Calendar.SECOND, 59);
+
+        Double totalIncomesThisMonthDB = incomeRepository.sumTotalIncomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        Double totalOutcomesThisMonthDB = outcomeRepository.sumTotalOutcomesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        Double totalPenaltiesThisMonthDB = penaltyRepository.sumTotalPenaltiesByFromAndTo(firstDayOfThisMonth, lastDayOfThisMonth);
+
+        BigDecimal totalIncomesThisMonth = BigDecimal.valueOf(totalIncomesThisMonthDB != null ? totalIncomesThisMonthDB : 0);
+        BigDecimal totalOutcomesThisMonth = BigDecimal.valueOf(totalOutcomesThisMonthDB != null ? totalOutcomesThisMonthDB : 0);
+        BigDecimal totalPenaltiesThisMonth = BigDecimal.valueOf(totalPenaltiesThisMonthDB != null ? totalPenaltiesThisMonthDB : 0);
+        BigDecimal totalTreasureThisMonth = totalIncomesThisMonth.add(totalPenaltiesThisMonth).subtract(totalOutcomesThisMonth);
+
+        if(from != null && to != null){
+        Double totalIncomesLastDB = incomeRepository.sumTotalIncomesByFromAndTo(from, to);
+        Double totalPenaltiesLastDB = penaltyRepository.sumTotalPenaltiesByFromAndTo(from, to);
+        Double totalOutcomesLastDB = outcomeRepository.sumTotalOutcomesByFromAndTo(from, to);
+        BigDecimal  totalIncomesLast = BigDecimal.valueOf(totalIncomesLastDB!= null ? totalIncomesLastDB : 0);
+        BigDecimal  totalPenaltiesLast = BigDecimal.valueOf(totalPenaltiesLastDB != null ? totalPenaltiesLastDB : 0);
+        BigDecimal totalOutcomesLast = BigDecimal.valueOf(totalOutcomesLastDB != null ? totalOutcomesLastDB : 0);
+
+        List<OutcomeResponse> lastOutcomes = outcomeRepository
+                .findAllByActiveIsTrueAndPaidDateBetweenOrderById(from, to).stream().map(
+                        OutcomeResponse::new
+        ).toList();
+        List<IncomeResponse> lastIncomes = incomeRepository.findAllByActiveIsTrueAndPaidDateBetweenOrderById(from, to).stream().map(
+                IncomeResponse::new
+        ).toList();
+        List<PenaltyResponse> lastPenalties = penaltyRepository.findAllByActiveIsTrueAndPaidDateBetweenAndStatusOrderById(from, to, PaidStatus.PAID).stream().map(
+                PenaltyResponse::new
+        ).toList();
+
+        BigDecimal totalTreasureLast = totalIncomesLast.add(totalPenaltiesLast).subtract(totalOutcomesLast);
+
+        return new TreasureDashboardResponse(
+                totalIncomes,
+                totalPenalties,
+                totalOutcomes,
+                totalTreasure,
+                totalIncomesThisMonth,
+                totalPenaltiesThisMonth,
+                totalOutcomesThisMonth,
+                totalTreasureThisMonth,
+                lastIncomes,
+                lastPenalties,
+                lastOutcomes,
+                totalIncomesLast,
+                totalPenaltiesLast,
+                totalOutcomesLast,
+                totalTreasureLast
+        );
+        }else{
+            return new TreasureDashboardResponse(
+                    totalIncomes,
+                    totalPenalties,
+                    totalOutcomes,
+                    totalTreasure,
+                    totalIncomesThisMonth,
+                    totalPenaltiesThisMonth,
+                    totalOutcomesThisMonth,
+                    totalTreasureThisMonth,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
     }
 }

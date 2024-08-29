@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/protected/penalties")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ROLE_PRESIDENT', 'ROLE_VICEPRESIDENT', 'ROLE_TREASURER', 'ROLE_ADMIN', 'ROLE_SECRETARY')")
 public class PenaltyController {
 
     private final PenaltyUseCase penaltyUseCase;
@@ -99,4 +101,6 @@ public class PenaltyController {
     public ResponseEntity<CustomResponse<?>> delete(@PathVariable Long id) {
         return penaltyUseCase.delete(id);
     }
+
+
 }

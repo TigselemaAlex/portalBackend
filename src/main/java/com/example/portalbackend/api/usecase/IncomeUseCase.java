@@ -81,8 +81,8 @@ public class IncomeUseCase extends AbstractUseCase{
         return customResponseBuilder.build(HttpStatus.OK, "Ingreso eliminado");
     }
 
-    public ResponseEntity<CustomResponse<?>> getLastByResidenceAndType(Long residence, Long incomeType) {
-        Income income = incomeService.getLastByResidenceAndType(residence, incomeType);
+    public ResponseEntity<CustomResponse<?>> getLastByResidenceAndType(Long residence, Long incomeType, Long parking) {
+        Income income = incomeService.getLastByResidenceAndTypeAndParking(residence, incomeType, parking);
         if (income == null) {
             return customResponseBuilder.build(HttpStatus.NOT_FOUND, "Ingreso no encontrado");
         }

@@ -127,8 +127,12 @@ public class MailService implements IMailService {
                 monthRange = "del mes " + CalendarUtil.getMonthAndYearSpanishTranslation(income.getPaidSince());
             }
         }
+        String parkingCode = "";
+        if(income.getParking()!= null){
+            parkingCode = income.getParking().getCode();
+        }
             model.put("concept",
-                    income.getType().getName()+ ", " +  monthRange);
+                    income.getType().getName()+" "+ parkingCode + ", " +  monthRange);
 
         model.put("day", String.format("%02d",
                 income.getPaidDate().get(Calendar.DAY_OF_MONTH)));

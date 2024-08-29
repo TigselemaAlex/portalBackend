@@ -15,6 +15,7 @@ public class CalendarUtil {
         if (date == null ) return null;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date);
+        calendar.add(Calendar.SECOND, 2);
         return calendar;
     }
 
@@ -31,8 +32,8 @@ public class CalendarUtil {
         if (calendar == null) return null;
         Calendar newCalendar = Calendar.getInstance();
         newCalendar.setTimeInMillis(calendar);
-        newCalendar.set(Calendar.DAY_OF_MONTH, 1);
-        newCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        newCalendar.set(Calendar.DAY_OF_MONTH, 2);
+        newCalendar.set(Calendar.HOUR_OF_DAY, 1);
         newCalendar.set(Calendar.MINUTE, 0);
         newCalendar.set(Calendar.SECOND, 0);
         return newCalendar;

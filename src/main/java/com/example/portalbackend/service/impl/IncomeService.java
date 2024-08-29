@@ -4,16 +4,14 @@ import com.example.portalbackend.api.dto.request.income.IncomeCasualCreateData;
 import com.example.portalbackend.api.dto.request.income.IncomeCasualUpdateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesCreateData;
 import com.example.portalbackend.api.dto.request.income.IncomeFeesUpdateData;
-import com.example.portalbackend.domain.entity.Income;
-import com.example.portalbackend.domain.entity.IncomeType;
-import com.example.portalbackend.domain.entity.PaidEvidence;
-import com.example.portalbackend.domain.entity.Residence;
+import com.example.portalbackend.domain.entity.*;
 import com.example.portalbackend.domain.exception.FileUploadException;
 import com.example.portalbackend.domain.repository.IncomeRepository;
 import com.example.portalbackend.domain.repository.PaidEvidenceRepository;
 import com.example.portalbackend.domain.specifications.IncomeSpecifications;
 import com.example.portalbackend.service.spec.IIncomeService;
 import com.example.portalbackend.service.spec.IIncomeTypeService;
+import com.example.portalbackend.service.spec.IParkingService;
 import com.example.portalbackend.service.spec.IResidenceService;
 import com.example.portalbackend.util.calendar.CalendarUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +33,7 @@ public class IncomeService implements IIncomeService {
     private final IncomeRepository incomeRepository;
     private final IResidenceService residenceService;
     private final IIncomeTypeService incomeTypeService;
+    private final IParkingService parkingService;
     private final PaidEvidenceRepository paidEvidenceRepository;
     private final FileService fileService;
 
@@ -61,15 +60,21 @@ public class IncomeService implements IIncomeService {
 
     @Override
     public Income saveIncomeFees(IncomeFeesCreateData data) throws IOException, FileUploadException {
-
+        Residence residence = residenceService.findById(data.residence());
         IncomeType incomeType = incomeTypeService.findById(data.incomeType());
+        Parking parking = null;
+        if (Objects.nonNull(data.parking())) {
+            parking = parkingService.findByIdAndResidence(data.parking(), residence);
+        }
+
         Income income = Income.builder()
                 .description(data.description())
                 .paidDate(CalendarUtil.getCalendar(data.paidDate()))
                 .amount(incomeType.getPrice())
                 .paidSince(CalendarUtil.getCalendarWithoutDays(data.paidSince()))
                 .paidUntil(CalendarUtil.getCalendarWithoutDays(data.paidUntil()))
-                .residence(residenceService.findById(data.residence()))
+                .residence(residence)
+                .parking(parking)
                 .code(generateCode())
                 .canBeDeleted(true)
                 .type(incomeType)
@@ -93,6 +98,7 @@ public class IncomeService implements IIncomeService {
     @Override
     public Income saveIncomeCasual(IncomeCasualCreateData data) throws IOException, FileUploadException {
         IncomeType incomeType = incomeTypeService.findById(data.incomeType());
+
         Income income = Income.builder()
                 .description(data.description())
                 .paidDate(CalendarUtil.getCalendar(data.paidDate()))
@@ -148,12 +154,18 @@ public class IncomeService implements IIncomeService {
     @Override
     public Income updateIncomeFees(Long id, IncomeFeesUpdateData data) throws IOException, FileUploadException {
         IncomeType incomeType = incomeTypeService.findById(data.incomeType());
+        Residence residence = residenceService.findById(data.residence());
+        Parking parking = null;
+        if (Objects.nonNull(data.parking())) {
+            parking = parkingService.findByIdAndResidence(data.parking(), residence);
+        }
+
         Income income = getIncomeById(id);
         income.setDescription(data.description());
         income.setAmount(data.amount());
         income.setPaidSince(CalendarUtil.getCalendarWithoutDays(data.paidSince()));
         income.setPaidUntil(CalendarUtil.getCalendarWithoutDays(data.paidUntil()));
-        income.setResidence(residenceService.findById(data.residence()));
+        income.setResidence(residence);
         income.setType(incomeType);
         income.setMonthsPaid(CalendarUtil.getMonthDifference(CalendarUtil.getCalendar(data.paidSince()), CalendarUtil.getCalendar(data.paidUntil())));
         if (data.paidEvidence() != null && data.paidEvidence().getSize() > 0) {
@@ -183,14 +195,19 @@ public class IncomeService implements IIncomeService {
     }
 
     @Override
-    public Income getLastByResidenceAndType(Long residence, Long incomeType) {
+    public Income getLastByResidenceAndTypeAndParking(Long residence, Long incomeType, Long parking) {
         Residence residenceObj = residenceService.findById(residence);
         IncomeType incomeTypeObj = incomeTypeService.findById(incomeType);
+        if (parking != null) {
+            Parking parkingObj = parkingService.findByIdAndResidence(parking, residenceObj);
+            return incomeRepository.findFirstByActiveIsTrueAndResidenceAndTypeAndParkingOrderByPaidUntilDesc(residenceObj, incomeTypeObj, parkingObj)
+                    .orElse(null);
+        }
         return incomeRepository.findFirstByActiveIsTrueAndResidenceAndTypeOrderByPaidUntilDesc(residenceObj, incomeTypeObj)
                 .orElse(null);
     }
 
-    private String generateCode(){
+    private String generateCode() {
         Income income = incomeRepository.findFirstByOrderByIdDesc().orElse(null);
         if (income == null) {
             return "COD-000001";

@@ -108,6 +108,9 @@ public class GlobalExceptionHandler {
             String message = ex.getMessage().substring(index+8).replaceAll("[()]", "").replaceAll("=", ": ").replaceAll("Ya existe la llave", "Ya existe un registro con el mismo ");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ErrorHandleMessage.constraintKeyToMessage(message));
         }
+        else if(errorCode.equals("22001")){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: No se pudo realizar la operación");
     }
 

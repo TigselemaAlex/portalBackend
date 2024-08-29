@@ -4,6 +4,7 @@ import com.example.portalbackend.api.dto.request.residence.ResidenceCreateData;
 import com.example.portalbackend.api.dto.request.residence.ResidenceUpdateData;
 import com.example.portalbackend.api.dto.response.PageResponse;
 import com.example.portalbackend.api.dto.response.residence.ResidenceResponse;
+import com.example.portalbackend.api.dto.response.residence_history.ResidenceHistoryResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.domain.entity.Residence;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class ResidenceUseCase extends AbstractUseCase {
@@ -48,6 +51,16 @@ public class ResidenceUseCase extends AbstractUseCase {
         Residence residence = residenceService.findById(id);
         ResidenceResponse response = new ResidenceResponse(residence);
         return customResponseBuilder.build(HttpStatus.OK, "Residencia obtenida exitosamente", response);
+    }
+
+    public ResponseEntity<CustomResponse<?>> findAllWithoutPagination(){
+        List<ResidenceResponse> responses =  residenceService.findAllNumbers().stream().map(ResidenceResponse::new).toList();
+        return customResponseBuilder.build(HttpStatus.OK, "Listado de todas las residencias", responses);
+    }
+
+    public ResponseEntity<CustomResponse<?>> findResidenceHistory(Long id){
+        List<ResidenceHistoryResponse> responses = residenceService.findResidenceHistory(id).stream().map(ResidenceHistoryResponse::new).toList();
+        return customResponseBuilder.build(HttpStatus.OK, "Listado de historial de residencia", responses);
     }
 
 

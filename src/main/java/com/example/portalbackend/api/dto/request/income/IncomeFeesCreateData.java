@@ -19,6 +19,7 @@ public record IncomeFeesCreateData(
         Long paidUntil,
         @NotNull(message = "Residencia es requerida")
         Long residence,
+        Long parking,
         @NotNull(message = "Tipo de ingreso es requerido")
         Long incomeType,
         @NotNull(message = "Evidencia de pago es requerida")

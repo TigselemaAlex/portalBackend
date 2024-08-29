@@ -41,6 +41,9 @@ public class PushNotificationService implements IPushNotificationService {
     @Override
     public void sendPushNotificationAllClients(String title, String message, Map<String, String> data) throws FirebaseMessagingException {
         List<AuthNotification> authNotifications = authNotificationRepository.findAllByDeviceTokenNotNull();
+        if (authNotifications.isEmpty()) {
+            return;
+        }
         MulticastMessage multicastMessage = MulticastMessage.builder()
                 .putAllData(data)
                 .setNotification(Notification.builder()

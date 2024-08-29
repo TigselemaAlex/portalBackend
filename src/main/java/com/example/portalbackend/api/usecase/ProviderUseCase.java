@@ -6,6 +6,7 @@ import com.example.portalbackend.api.dto.response.provider.ProviderResponse;
 import com.example.portalbackend.common.CustomResponse;
 import com.example.portalbackend.common.CustomResponseBuilder;
 import com.example.portalbackend.service.spec.IProviderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -15,10 +16,11 @@ import java.util.List;
 @Component
 public class ProviderUseCase extends AbstractUseCase{
 
-    private IProviderService providerService;
+    private final IProviderService providerService;
 
-    protected ProviderUseCase(CustomResponseBuilder customResponseBuilder) {
+    protected ProviderUseCase(CustomResponseBuilder customResponseBuilder, IProviderService providerService) {
         super(customResponseBuilder);
+        this.providerService = providerService;
     }
 
     public ResponseEntity<CustomResponse<?>> findAll() {
